@@ -4,10 +4,10 @@ const allComponents = {
   C1: 85.4305,
   C2: 8.5901,
   C3: 2.7031,
-  IC4: 0.1882,
+  'I-C4': 0.1882,
   C4: 0.2777,
-  NC5: 0,
-  IC5: 0.0359,
+  'N-C5': 0,
+  'I-C5': 0.0359,
   C5: 0.0207,
   C6: 0.0263,
   C7: 0.0048,
@@ -19,15 +19,21 @@ const allComponents = {
   H2O: 0,
 };
 
-export const ComponentSelector = ({
-  optionValues,
-  onSelect,
-  setOptionValues,
-}) => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
+export const ComponentSelector = ({ optionValues, onSelect, setOptionValues, teaValues }) => {
+
+  const [selectedOptions, setSelectedOptions] = useState(Object.keys(allComponents));
 
   useEffect(() => {
-    setOptionValues(allComponents);
+    if (teaValues?.composition?.length === 0)
+      setOptionValues(allComponents)
+    else
+      setOptionValues(teaValues?.composition ?? [])
+
+  }, [teaValues]);
+
+  useEffect(() => {
+    if (optionValues.length === 0)
+      setOptionValues(allComponents)
   }, []);
 
   const toggleOption = (option) => {
