@@ -10,6 +10,14 @@ function AddComponent({ show, setShow, saveComponent }) {
   const [mw, setMw] = useState("");
   const [lhw, setlhw] = useState("");
   const [sc, setSc] = useState("");
+
+
+  function handleSave() {
+    const newComp = { key: name, data: { lhw: lhw, gwp: gwp, mw: mw, sc: sc } }
+    console.log("New Component: ", newComp)
+    saveComponent(newComp)
+  }
+
   return (
     <Modal
       show={show}
@@ -114,9 +122,7 @@ function AddComponent({ show, setShow, saveComponent }) {
         </Button>
         <Button
           variant="primary"
-          onClick={() =>
-            saveComponent([{ [name]: { lhw: lhw, gwp: gwp, mw: mw, sc: sc } }])
-          }
+          onClick={() => handleSave()}
         >
           Save
         </Button>   

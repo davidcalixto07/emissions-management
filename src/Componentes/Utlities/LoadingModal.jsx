@@ -8,14 +8,12 @@ const LoadingModal = ({ show, container }) => {
 
   useEffect(() => {
     if (container) {
-      console.log("My Container", container);
       const styles = {
         height: `${container.offsetHeight}px`,
         width: `${container.offsetWidth}px`,
         top: `${container.offsetTop}px`,
         left: `${container.offsetLeft}px`,
       };
-      console.log("My Styles", styles);
       setDimensions(styles);
     }
   }, [container]);

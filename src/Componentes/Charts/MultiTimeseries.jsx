@@ -9,27 +9,29 @@ Chart.register(...registerables, zoomPlugin);
 
 const MultiTimeseries = ({ values, label, max, zero, freeRatio, units, maxTicks = 10, title, }) => {
 
-    const datasets = values.map((element) => {
-        const datavalues = element.t.map((value, index) => {
-            return { x: value, y: element.v[index] };
-        });
+    const datasets = useMemo(() => {
+        return values.map((element) => {
+            const datavalues = element.t.map((value, index) => {
+                return { x: value, y: element.v[index] };
+            });
 
-        const val = {
-            label: element.label,
-            data: datavalues,
-            borderColor: element.color ?? '#0f2d57',
-            backgroundColor: element.Bcolor ?? '#0f2d5760',
-            borderWidth: 1.4,
-            fill: element.f ?? false,
-            pointRadius: element.pointRadius ?? 0.1,
-        }
-        return val;
-    });
+            const val = {
+                label: element.label,
+                data: datavalues,
+                borderColor: element.color ?? '#0f2d57',
+                backgroundColor: element.Bcolor ?? '#0f2d5760',
+                borderWidth: 1.4,
+                fill: element.f ?? false,
+                pointRadius: element.pointRadius ?? 0.1,
+            }
+            return val;
+        });
+    }, [values])
+
+
     const data = { datasets: datasets }
 
     const chartOptions = useMemo(() => {
-        const timeUnit = maxTicks > 24 ? 'day' : 'hour';
-
         return {
             responsive: true,
             maintainAspectRatio: !freeRatio ?? true,
@@ -88,7 +90,10 @@ const MultiTimeseries = ({ values, label, max, zero, freeRatio, units, maxTicks 
                     labels: {
                         font: {
                             size: 12
-                        }
+                        },
+                        filter: function (legendItem, chartData) {
+                            return !legendItem.text.includes('_'); // Hide legend labels containing '_'
+                        },
                     }
                 },
                 title: {
@@ -97,7 +102,7 @@ const MultiTimeseries = ({ values, label, max, zero, freeRatio, units, maxTicks 
                 }
             },
         };
-    }, [freeRatio, max, maxTicks, zero, units]);
+    }, []);
 
 
     return (

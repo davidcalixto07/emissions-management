@@ -39,7 +39,7 @@ const EmissionsAppV2 = () => {
   const [units, setUnits] = useState(defaultUnits);
   const [dates, setDates] = useState({});
 
-  const { teasList, setSidebarList, coordinates, imageSrc, loading } =
+  const { teasList, setSidebarList, coordinates, imageSrc, loading, alarms } =
     useEmissionsV2(dates);
 
   const nav = useNavigate();
@@ -85,9 +85,8 @@ const EmissionsAppV2 = () => {
           <span onClick={() => nav("/connection")}>Connection Mananger</span>
           <span onClick={() => nav("/license")}>License Manager</span>
         </div>
-        <Westbot />
       </AssetSidebar>
-
+      <Westbot />
       <Outlet
         context={[
           selectedAsset,
@@ -100,6 +99,7 @@ const EmissionsAppV2 = () => {
           imageSrc,
           loading,
           setDates,
+          alarms
         ]}
       />
     </div>

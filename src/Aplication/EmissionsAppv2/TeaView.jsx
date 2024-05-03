@@ -22,6 +22,7 @@ const TeaView = () => {
     setDates
   ] = useOutletContext();
   const [assetData, setAssetData] = useState({ timeSerie: [] });
+  const [lastTs, setLastTs] = useState(null);
   const [results, setResults] = useState({});
 
   useEffect(() => {
@@ -31,8 +32,8 @@ const TeaView = () => {
     const flare = teasList.find((x) => x.assetId == selectedAsset.assetId);
     if (flare) {
       console.log("Finded ", flare);
-      flare.status = { anh: [], west: ['presssure', 'temperature'] }
       setAssetData(flare);
+      setLastTs(flare.timeSerie[flare.timeSerie.length - 1]._time)
     }
   }, [selectedAsset, teasList]);
 
@@ -55,6 +56,7 @@ const TeaView = () => {
         <EmissionsView
           data={assetData}
           units={units}
+          lastTs={lastTs}
           loading={loading}
           setCalcs={setResults}
         />

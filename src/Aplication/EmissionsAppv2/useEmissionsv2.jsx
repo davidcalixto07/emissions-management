@@ -1,16 +1,25 @@
-import { useEffect, useState } from "react";
-import { TestData } from "./times";
+import { useEffect, useMemo, useState } from "react";
 
 function useEmissionsV2(dates) {
   const [imageSrc, setImageSrc] = useState(null);
   const [coordinates, setCoordinates] = useState({ start: "0,0", end: "0.0" });
   const [sidebarList, setSidebarList] = useState([]);
-  const [teasList, setTeasList] = useState([]);
+  const [flares, setFlares] = useState([]);
+  const [assetsFlareList, setAssetsFlareList] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("Use Emissions Dates", dates);
 
 
   useEffect(() => {
+    GetFlaresList();
+  }, [sidebarList, dates]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => GetFlaresTs(assetsFlareList), 30000);
+    return () => clearInterval(intervalId);
+  }, [assetsFlareList]);
+
+
+  function GetFlaresList() {
     setLoading(true);
     if (sidebarList.length === 0) {
       setLoading(false);
@@ -29,50 +38,41 @@ function useEmissionsV2(dates) {
       })
       .then((json) => {
         const assets = json._embedded.assets;
-        setTeasList(assets);
-        console.warn(assets);
-        GetTeasTs(assets);
+        setAssetsFlareList(assets);
+        GetFlaresTs(assets);
       })
       .catch((error) => {
         console.error("Error fetching image:", error);
       })
       .finally(() => { });
-  }, [sidebarList, dates]);
+  }
 
-  function GetTeasTs(teaslist) {
+  function GetFlaresTs(flareList) {
     if (!dates.startDate || sidebarList.length == 0)
       return;
-
+    console.log("Calculating for", flareList);
     const isoStartDate = dates.startDate.toISOString();
     const isoEndDate = dates.endDate ? dates.endDate.toISOString() : new Date(2050, 1, 1).toISOString();
 
-
-    const promises = teaslist.map(async (flare) => {
+    const promises = flareList.map(async (flare) => {
       const url = `/api/emissionsapi2-colwest2/v1/ProcessTimeserie?assetId=${flare.assetId}&from=${isoStartDate}&to=${isoEndDate}&model=both`;
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`Failed to fetch data for assetId ${flare.assetId}`);
+        console.warn(`Failed to fetch data for assetId ${flare.assetId}`);
+        return flare;
       }
       const json = await response.json();
-      console.log("Api response from ", flare, json);
-      flare.timeSerie = Array.isArray(json) ? json : [];
-      var sum1 = 0, sum2 = 0;
-
-      flare.timeSerie.forEach(point => {
-        sum1 += point.emissions.anh.C02 ?? 0;
-        sum2 += point.emissions.anh.CO2e ?? 0;
-      });
-      flare.avgEmissions = sum1 / flare.timeSerie.length;
-      flare.avgEqEmissions = sum2 / flare.timeSerie.length;
-      console.log("Flare", flare);
-      setLoading(false);
+      console.log("Api response from ", json);
+      flare.timeSerie = Array.isArray(json.timeseries) ? json.timeseries : [];
+      flare.calculations = json.calculations;
       return flare;
     });
 
     Promise.all(promises)
-      .then((updatedTeas) => {
-        console.log("Teas with fetched data:", updatedTeas);
-        setTeasList(updatedTeas);
+      .then((updatedFlares) => {
+        console.log("Teas with fetched data:", updatedFlares);
+        setFlares(updatedFlares);
+        setLoading(false)
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -112,6 +112,32 @@ function useEmissionsV2(dates) {
         console.error("Error fetching coordinates:", error);
       });
   }
+  const alarms = useMemo(() => {
+    const rand1 = Math.floor(Math.random() * flares.length);
+    const rand2 = Math.floor(Math.random() * flares.length);
+
+    if (flares.length > 0) {
+      console.log(flares[rand1].assetId)
+      return [
+        {
+          id: "433",
+          severity: Math.floor(Math.random() * 3) * 10,
+          timestamp: "30-01-24 20:52",
+          entityId: sidebarList[rand1].assetId,
+          description: "Emissions too high",
+        },
+        {
+          id: "435",
+          severity: Math.floor(Math.random() * 3) * 10,
+          timestamp: "01-01-24 10:43",
+          entityId: sidebarList[rand2].assetId,
+          description: "Emissions too high",
+        },
+      ]
+    }
+    else
+      return []
+  }, [sidebarList])
 
   useEffect(() => {
     fetchImage();
@@ -123,6 +149,6 @@ function useEmissionsV2(dates) {
     };
   }, []);
 
-  return { teasList, setSidebarList, coordinates, imageSrc, loading };
+  return { teasList: flares, setSidebarList, coordinates, imageSrc, loading, alarms };
 }
 export default useEmissionsV2;

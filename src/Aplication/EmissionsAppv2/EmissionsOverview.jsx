@@ -9,15 +9,17 @@ import MultiTimeseries from "../../Componentes/Charts/MultiTimeseries";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DirectEmissionsModal from "./DirectEmissionsModal";
+import { type } from "@testing-library/user-event/dist/type";
+import { addTs, agregateTs } from "./Agregates";
+import EmissionsPlot from "../../Componentes/Charts/EmissionsPlot";
 
 const EmissionsOverview = () => {
-  const [, , , units, , teasList, coordinates, imageSrc, loading, setDates] =
+  const [, , , units, , teasList, coordinates, imageSrc, loading, setDates, alarms] =
     useOutletContext();
 
   const [totalCo2, setTotalCo2] = useState(0);
   const [totalEq, setTotalEq] = useState(0);
   const [directModal, setDirectModal] = useState(false);
-
   const [ts, setTs] = useState([]);
   const nav = useNavigate();
 
@@ -32,20 +34,31 @@ const EmissionsOverview = () => {
   useEffect(() => {
     const totalCo2 = teasList.reduce(
       (accumulator, currentValue) =>
-        accumulator + (currentValue.avgEmissions ?? 0),
-      0
+        accumulator + (currentValue.calculations?.emissions.anh.CO2.total ?? 0), 0
     );
     const totalEq = teasList.reduce(
       (accumulator, currentValue) =>
-        accumulator + (currentValue.avgEqEmissions ?? 0),
+        accumulator + (currentValue.calculations?.emissions.anh.CO2e.total ?? 0),
       0
     );
     setTotalCo2(totalCo2);
     setTotalEq(totalEq);
-    const ts = teasList.length ? teasList[0].timeSerie ?? [] : [];
-    setTs(ts);
-  }, [teasList]);
+    console.log(teasList)
+    const flare_ts = teasList[0]?.timeSerie ?? [];
+    console.log(flare_ts);
+    setTs(flare_ts);
 
+    // const agregated_flares = teasList.map(flare => agregateTs(flare.timeSerie ?? []))
+    // console.log(agregated_flares)
+    // // const calcTs = { _times: agregated_flares.map((t) => t._time), values: ts.map((t) => t.calculations?.emissions.anh.CO2e.total ?? 0) };
+    // if (agregated_flares.length > 0) {
+    //   const times = agregated_flares[0].map(ts => ts._time)
+    //   const values = agregated_flares[0].map(ts => ts.flow)
+    //   console.log(times)
+    //   setTs({ _times: flare.timeSerie?.map((t) => t._time), values: values });
+    //   addTs(agregated_flares);
+    // }
+  }, [teasList]);
   return (
     <CustomGrid
       className={"Overview-100"}
@@ -86,6 +99,7 @@ const EmissionsOverview = () => {
               Total CO<s>2</s> Emissions
             </span>
           }
+          decimals={3}
           value={units.emissions.conv(totalCo2)}
           units={units.emissions.name}
         />
@@ -101,6 +115,7 @@ const EmissionsOverview = () => {
           name={<span>Total Emissions</span>}
           value={units.emissions.conv(totalEq)}
           units={units.emissions.name}
+          decimals={5}
         />
       </GridElement>
 
@@ -116,7 +131,7 @@ const EmissionsOverview = () => {
           data={[
             {
               label: `Total (${units.emissions.name})`,
-              data: teasList.map((a) => units.emissions.conv(a.avgEqEmissions)),
+              data: teasList.map((flare) => units.emissions.conv((flare.calculations?.emissions.anh.CO2e.total ?? 0) / totalEq)),
             },
           ]}
           barWidth={32}
@@ -131,44 +146,12 @@ const EmissionsOverview = () => {
         className="grid-cell-white"
         com="Time serie"
       >
-        <MultiTimeseries
-          values={[
-            {
-              label: "CO2",
-              t: ts.map((t) => t._time),
-              v: ts.map((t) => units.emissions.conv(t.emissions.anh.C02)),
-              color: "#0f2d57",
-              Bcolor: "#0f2d5760",
-              f: true,
-            },
-            {
-              label: "methane",
-              t: ts.map((t) => t._time),
-              v: ts.map((t) => units.emissions.conv(t.emissions.anh.methane)),
-              color: "#6f2dA7",
-              Bcolor: "#6f2dA760",
-              f: true,
-            },
-            {
-              label: "CO2e",
-              t: ts.map((t) => t._time),
-              v: ts.map((t) => units.emissions.conv(t.emissions.anh.CO2e)),
-              color: "#03D707",
-              Bcolor: "#03D70760",
-              f: true,
-            },
-            {
-              label: "NOx",
-              t: ts.map((t) => t._time),
-              v: ts.map((t) => units.emissions.conv(t.emissions.anh.NOx)),
-              color: "#6f2d07",
-              Bcolor: "#6f2d0760",
-              f: true,
-            },
-          ]}
-          title={`Emissions (${units.emissions.name})`}
-          freeRatio
-        ></MultiTimeseries>
+        <EmissionsPlot
+          timestamps={ts.map((t) => t._time)}
+          modelsData={ts.map((t) => t.emissions.anh)}
+          units={'TCO2e'}
+          timeserie={ts}
+        />
       </GridElement>
 
       <GridElement
@@ -179,23 +162,8 @@ const EmissionsOverview = () => {
       >
         <h5>Emissions Events</h5>
         <EventsTable
-          eventsList={[
-            {
-              id: "433",
-              severity: 20,
-              timestamp: "30-01-24 20:52",
-              entityId: 1,
-              description: "Emissions too high",
-            },
-            {
-              id: "435",
-              severity: 20,
-              timestamp: "01-01-24 10:43",
-              entityId: 1,
-              description: "Emissions too high",
-            },
-          ]}
-          totalAssetList={[{ assetId: 1, name: "HP Flare" }]}
+          eventsList={alarms}
+          totalAssetList={teasList}
           loading={loading}
         />
       </GridElement>

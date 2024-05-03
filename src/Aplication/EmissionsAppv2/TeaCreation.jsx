@@ -9,7 +9,6 @@ import axios from "axios";
 const emptyForm = {
   flareId: "",
   flareType: "Flare Alta",
-  pressure: "",
   tecnology: "",
   height: "",
   diameter: "",
@@ -19,8 +18,8 @@ const emptyForm = {
   measureMethod: "Balance",
   measureType: "Coriolis",
   transmitterSerial: "",
-  latitude: "",
-  longitude: "",
+  latitude: "-75.290777",
+  longitude: "3.072371",
   wind: "",
   flareDiameter: "",
   defaultModel: "",
@@ -35,14 +34,15 @@ const AppConfiguration = ({ assetData }) => {
   const [statusText, setStatusText] = useState("");
   const [extraComponent, setExtraComponent] = useState([]);
   const [showModalExtraComponent, setShowModalExtraComponent] = useState(false);
-  const [optionValues, setOptionValues] = useState([]);
-  const [selectedComponents, setSelectedComponents] = useState([0]);
-  const [mappedComponents, setMappedComponents] = useState();
+  const [optionValues, setOptionValues] = useState(assetData?.composition ?? []);
+  const [selectedComponents, setSelectedComponents] = useState([]);
+
+  console.log(assetData);
 
   useEffect(() => {
     setFormData(assetData?.data ?? emptyForm);
-    setMappedComponents(assetData?.data?.composition);
   }, [assetData]);
+
   const totalComposition = selectedComponents.reduce((total, key) => {
     if (
       optionValues[key] != null &&
@@ -61,22 +61,43 @@ const AppConfiguration = ({ assetData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    const parsed_value = parseFloat(value);
-    const newValue = isNaN(parsed_value) ? value : parsed_value;
-
     setFormData((prevState) => ({
       ...prevState,
-      [name]: newValue,
+      [name]: value,
     }));
   };
+
+  console.log(optionValues);
+  console.log(selectedComponents);
+
+
+  function ParseForm(obj) {
+    for (const key in obj) {
+      const floatValue = parseFloat(obj[key]);
+      if (!isNaN(floatValue)) {
+        obj[key] = floatValue;
+      }
+    }
+    return obj;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    formData.composition = optionValues;
+
+    const filteredData = Object.keys(optionValues)
+      .filter(key => selectedComponents.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = optionValues[key];
+        return obj;
+      }, {});
+    console.log(filteredData);
+
+    formData.composition = filteredData;
     console.log(formData);
+    const parsedData = ParseForm(formData);
 
     try {
-      const response = await axios.post("/api/assets/CreateAsset", formData);
+      const response = await axios.post("/api/assets/CreateAsset", parsedData);
       console.log("Response:", response.data);
       setStatusText("Created");
       window.location.href = "/";
@@ -84,15 +105,20 @@ const AppConfiguration = ({ assetData }) => {
       console.error("Error:", error);
     }
   };
-  function saveComponent(data) {
-    setExtraComponent(data);
+
+  async function saveComponent(data) {
+    console.log("Save Component", data);
     setShowModalExtraComponent(false);
+    try {
+      const response = await axios.post("/api/emissionsapi2-colwest2/v1/AddComponent", data);
+      console.log("Response:", response.data);
+      setStatusText("Created");
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
-  function saveComponent(data) {
-    setExtraComponent(data);
-    setShowModalExtraComponent(false);
-  }
+
   return (
     <form onSubmit={handleSubmit} href="/" className="fullSize">
       <CustomGrid
@@ -123,53 +149,39 @@ const AppConfiguration = ({ assetData }) => {
             <option value="Flare Baja">Flare Baja</option>
           </select>
         </GridElement>
-
         <GridElement className="grid-cell-white vert" cols={1} rows={10}>
-          <GridElement cols={1} rows={2} ns>
-            <h4 style={{ margin: "10px" }}>Flare Components Composition</h4>
-          </GridElement>
-          {!mappedComponents ? (
-            <>
-              <ComponentSelector
-                optionValues={optionValues}
-                setOptionValues={setOptionValues}
-                onSelect={handleSelect}
-              />
-              <div>
-                <br></br>
-                <Button onClick={() => setShowModalExtraComponent(true)}>
-                  {" "}
-                  Add Component{" "}
-                </Button>
-                <br></br>
+          <h4 style={{ margin: "10px" }}>Flare Components Composition</h4>
+          <ComponentSelector
+            optionValues={optionValues}
+            setOptionValues={setOptionValues}
+            onSelect={handleSelect}
+            teaValues={assetData}
+          />
+          <div>
+            <br></br>
+            <Button onClick={() => setShowModalExtraComponent(true)}>
+              {" "}
+              Add Component{" "}
+            </Button>
+            <br></br>
 
-                <span> Total Composition: </span>
-                {totalComposition.toFixed(2)}
-                <br></br>
-                <div className="tooltip-container">
-                  <div
-                    className="tooltip-content"
-                    data-tooltip="Información de ayuda"
-                  >
-                    The total composition should be 100%, but if it's not, you
-                    should keep the diference lower than 1.5%
-                  </div>
-                  <div className="content">
-                    {" "}
-                    <img src="./info.png" width={35} />
-                  </div>
-                </div>
+            <span> Total Composition: </span>
+            {totalComposition.toFixed(2)}
+            <br></br>
+            <div className="tooltip-container">
+              <div
+                className="tooltip-content"
+                data-tooltip="Información de ayuda"
+              >
+                The total composition should be 100%, but if it's not, you
+                should keep the diference lower than 1.5%
               </div>
-            </>
-          ) : (
-            <GridElement cols={1} rows={8} ns>
-              <h6>
+              <div className="content">
                 {" "}
-                You already have the Flear Components Composition data from the
-                connection mananger{" "}
-              </h6>
-            </GridElement>
-          )}
+                <img src="./info.png" width={35} />
+              </div>
+            </div>
+          </div>
         </GridElement>
         <GridElement className="grid-cell-white justified" rows={1} cols={2}>
           <span>Wind Speed (m/s): * </span>
@@ -190,9 +202,7 @@ const AppConfiguration = ({ assetData }) => {
             onChange={handleChange}
           >
             <option value="Flare Combinada">Flare Combinada</option>
-            <option value="Flare Asistida por aire">
-              Flare Asistida por aire
-            </option>
+            <option value="Flare Asistida por aire">Flare Asistida por aire</option>
             <option value="Flare Asistida por vapor">
               Flare Asistida por vapor
             </option>
@@ -359,7 +369,7 @@ const AppConfiguration = ({ assetData }) => {
           />
         </GridElement>
         <GridElement className="grid-cell-white justified" rows={1} cols={2}>
-          <span>Combustion Efficiency</span>
+          <span>Combustion Emissions</span>
           <input
             type="text"
             name="CombustionEfficiency"
