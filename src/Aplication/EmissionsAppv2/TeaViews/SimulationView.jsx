@@ -36,13 +36,13 @@ const SimulationView = ({ averages }) => {
   }, []);
 
   useEffect(() => {
-    setFlow(averages.flow.avg);
-    setPressure(averages.pressure.avg);
-    setTemperature(averages.temperature.avg);
+    setFlow(averages?.flow.avg);
+    setPressure(averages?.pressure.avg);
+    setTemperature(averages?.temperature.avg);
     CalculateEmissions(
-      averages.flow.avg,
-      averages.pressure.avg,
-      averages.temperature.avg
+      averages?.flow.avg,
+      averages?.pressure.avg,
+      averages?.temperature.avg
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -50,12 +50,12 @@ const SimulationView = ({ averages }) => {
   useEffect(() => {
     if (
       actualEmissions ||
-      isNaN(averages.CO2Emissions.avg) ||
-      averages.CO2Emissions.avg === 0
+      isNaN(averages?.CO2Emissions?.avg) ||
+      averages?.CO2Emissions?.avg === 0
     )
       return;
     console.log("useEffect actualEmissions");
-    setActualEmissions(averages.CO2Emissions.avg);
+    setActualEmissions(averages?.CO2Emissions.avg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
