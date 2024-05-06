@@ -21,7 +21,7 @@ const Alerts = ({ status, message, show, setShowAlert }) => {
           onClose={() => setShowAlert(false)}
           dismissible
         >
-          The DataPoint <strong> wasn't created :</strong> {status}
+          The DataPoint <strong> wasn't created :</strong> {message}
         </Alert>
       )}
     </>

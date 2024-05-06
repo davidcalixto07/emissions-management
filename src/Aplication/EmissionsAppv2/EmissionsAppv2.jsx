@@ -99,7 +99,7 @@ const EmissionsAppV2 = () => {
           imageSrc,
           loading,
           setDates,
-          alarms
+          alarms,
         ]}
       />
     </div>

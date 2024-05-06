@@ -52,6 +52,7 @@ const Mapping = () => {
   }
 
   console.log("Datamappppppppings", dataMapings);
+  console.log(dataMappingComponents);
   async function handleDataSourceClick(datasource) {
     setSelectedDataSource(datasource);
 

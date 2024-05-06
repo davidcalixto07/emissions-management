@@ -2,6 +2,7 @@ import { useState } from "react";
 import GridElement from "../../Aplication/Utils/GridElement";
 import DeleteIcon from "../AssetsSidebar/trash-can-icon.png";
 import MapComponent from "./MapComponent";
+import Alerts from "../Alerts/Alerts";
 import { Button } from "react-bootstrap";
 const Datapoint = ({
   datapoint,
@@ -16,6 +17,7 @@ const Datapoint = ({
   showModalMapComponents,
   setShowModalMapComponents,
 }) => {
+  const [showAlert, setShowAlert] = useState(false);
   return datapoint.variable !== "Components" ? (
     <>
       <GridElement cols={6} rows={1} style={{ alignContent: "center" }}>
@@ -114,7 +116,14 @@ const Datapoint = ({
             </select>
           </span>
           <div style={{ width: "5em" }}>
-            <Button onClick={() => setShowModalMapComponents(true)}>
+            <Button
+              onClick={() =>
+                datapoint.flare == ""
+                  ? setShowAlert(true)
+                  : setShowModalMapComponents(true)
+              }
+            >
+              {console.log(datapoint.flare)}
               Map Your Components
             </Button>
           </div>
@@ -126,6 +135,14 @@ const Datapoint = ({
           data={dataMappingComponents}
         />
       </GridElement>
+      <Alerts
+        status={400}
+        setShowAlert={setShowAlert}
+        show={showAlert}
+        message={
+          "Please to map your components first select a Flare to map that components"
+        }
+      />
     </>
   );
 };

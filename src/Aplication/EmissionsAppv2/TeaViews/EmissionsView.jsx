@@ -25,26 +25,34 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
   const [gasesTs, setGasesTs] = useState([]);
   const [compositionData, setCompositionData] = useState([]);
   const [calculations, setCalculations] = useState({ emissions: {} });
-  const [gases, setGases] = useState([])
+  const [gases, setGases] = useState([]);
 
-
-  useEffect(() => { console.log(lastTs) }, [lastTs])
   useEffect(() => {
-    console.log("Useeffect ", data)
-    if (!data || !data.data)
-      return;
+    console.log(lastTs);
+  }, [lastTs]);
+  useEffect(() => {
+    console.log("Useeffect ", data);
+    if (!data || !data.data) return;
     // Composition top  calculation
     const comparray = Object.entries(data.data?.composition ?? {});
     comparray.sort((a, b) => b[1] - a[1]);
-    const top5Keys = comparray.slice(0, comparray.length > 5 ? 5 : comparray.length);
-    setCompositionData({ comps: top5Keys.map((e) => e[0]), values: top5Keys.map((e) => e[1]) })
+    const top5Keys = comparray.slice(
+      0,
+      comparray.length > 5 ? 5 : comparray.length
+    );
+    setCompositionData({
+      comps: top5Keys.map((e) => e[0]),
+      values: top5Keys.map((e) => e[1]),
+    });
 
     // Calculations
-    setCalculations(data.calculations ?? {})
-    setGases(Object.keys(data.calculations.emissions[model] ?? {}))
+    setCalculations(data.calculations ?? {});
+    console.log(data.data);
+    setCalcs(data.data);
+    setGases(Object.keys(data.calculations.emissions[model] ?? {}));
 
-    setTimeseries(data.timeSerie)
-    console.log("New data", data)
+    setTimeseries(data.timeSerie);
+    console.log("New data", data);
   }, [data, lastTs]);
 
   function generateFutureDates(startISOString, numberOfDates) {
@@ -101,7 +109,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
   }
 
   useEffect(() => {
-    console.log(timeseries)
+    console.log(timeseries);
   }, [gas, model, timeseries]);
 
   return (
@@ -128,18 +136,17 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
         <BarChart
           legend="Gas Composition"
           labels={compositionData.comps}
-          data={
-            [
-              {
-                label: "Actual",
-                data: compositionData.values,
-                backgroundColor: '#40408fa0'
-              },
-              {
-                label: "Mean",
-                data: compositionData.values
-              },
-            ]}
+          data={[
+            {
+              label: "Actual",
+              data: compositionData.values,
+              backgroundColor: "#40408fa0",
+            },
+            {
+              label: "Mean",
+              data: compositionData.values,
+            },
+          ]}
           barWidth={12}
           legendPos="top"
         />
@@ -150,17 +157,23 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           metrics={[
             {
               name: "average",
-              value: units.emissions.conv(calculations.emissions[model]?.CO2e.avg ?? 0),
+              value: units.emissions.conv(
+                calculations.emissions[model]?.CO2e.avg ?? 0
+              ),
               units: units.emissions.name,
             },
             {
               name: "peak",
-              value: units.emissions.conv(calculations.emissions[model]?.CO2e.max ?? 0),
+              value: units.emissions.conv(
+                calculations.emissions[model]?.CO2e.max ?? 0
+              ),
               units: units.emissions.name,
             },
             {
               name: "Total",
-              value: units.emissions.conv(calculations.emissions[model]?.CO2e.total ?? 0),
+              value: units.emissions.conv(
+                calculations.emissions[model]?.CO2e.total ?? 0
+              ),
               units: units.emissions.name,
             },
           ]}
@@ -179,7 +192,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           <option value={"west"}>West </option>
           <option value={"anh"}>ANH</option>
           <option value={"em_factor"}>Emissions Factor</option>
-
+          <option value={"direct"}>Direct </option>
         </select>
         Variable:
         <select
@@ -189,17 +202,11 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           style={{ width: "6.5rem" }}
         >
           <option>All</option>
-          {
-            gases.map((gas) =>
-              <option>{gas}</option>
-            )
-          }
-
+          {gases.map((gas) => (
+            <option>{gas}</option>
+          ))}
         </select>
       </GridElement>
-      {
-        console.log(data.status)
-      }
       <GridElement
         rows={6}
         cols={4}
@@ -210,7 +217,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           <EmissionsPlot
             timestamps={timeseries.map((t) => t._time)}
             modelsData={timeseries.map((t) => t.emissions[model])}
-            units={'TCO2e'}
+            units={"TCO2e"}
           />
         ) : (
           <div className="tooltip-container">
@@ -296,30 +303,41 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           ]}
         />
       </GridElement>
-      {
-      }
+      {}
       <GridElement rows={2} cols={4} className="grid-cell-white metricView">
         <MetricView
-          title={`${(gas === 'All' || gas === 'efficiency') ? 'CO2' : gas} Emissions`}
-          metrics={
-            [
-              {
-                name: "average",
-                value: units.emissions.conv((calculations.emissions[model]?.[(gas === 'All' || gas === 'efficiency') ? 'CO2' : gas].avg ?? 0)),
-                units: units.emissions.name,
-              },
-              {
-                name: "peak",
-                value: units.emissions.conv((calculations.emissions[model]?.[(gas === 'All' || gas === 'efficiency') ? 'CO2' : gas].max ?? 0)),
-                units: units.emissions.name,
-              },
-              {
-                name: "Total",
-                value: units.emissions.conv((calculations.emissions[model]?.[(gas === 'All' || gas === 'efficiency') ? 'CO2' : gas].total ?? 0)),
-                units: units.emissions.name,
-              },
-            ]
-          }
+          title={`${
+            gas === "All" || gas === "efficiency" ? "CO2" : gas
+          } Emissions`}
+          metrics={[
+            {
+              name: "average",
+              value: units.emissions.conv(
+                calculations.emissions[model]?.[
+                  gas === "All" || gas === "efficiency" ? "CO2" : gas
+                ].avg ?? 0
+              ),
+              units: units.emissions.name,
+            },
+            {
+              name: "peak",
+              value: units.emissions.conv(
+                calculations.emissions[model]?.[
+                  gas === "All" || gas === "efficiency" ? "CO2" : gas
+                ].max ?? 0
+              ),
+              units: units.emissions.name,
+            },
+            {
+              name: "Total",
+              value: units.emissions.conv(
+                calculations.emissions[model]?.[
+                  gas === "All" || gas === "efficiency" ? "CO2" : gas
+                ].total ?? 0
+              ),
+              units: units.emissions.name,
+            },
+          ]}
           decimals={4}
         />
       </GridElement>

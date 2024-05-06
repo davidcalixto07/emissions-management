@@ -9,6 +9,7 @@ import axios from "axios";
 const emptyForm = {
   flareId: "",
   flareType: "Flare Alta",
+  pressure: "",
   tecnology: "",
   height: "",
   diameter: "",
@@ -18,8 +19,8 @@ const emptyForm = {
   measureMethod: "Balance",
   measureType: "Coriolis",
   transmitterSerial: "",
-  latitude: "-75.290777",
-  longitude: "3.072371",
+  latitude: "",
+  longitude: "",
   wind: "",
   flareDiameter: "",
   defaultModel: "",
@@ -27,6 +28,8 @@ const emptyForm = {
   MinEfficiency: "",
   CombustionEfficiency: "",
   DestructionEfficiency: "",
+  Span: "",
+  InstrumentalError: "",
 };
 
 const AppConfiguration = ({ assetData }) => {
@@ -34,15 +37,14 @@ const AppConfiguration = ({ assetData }) => {
   const [statusText, setStatusText] = useState("");
   const [extraComponent, setExtraComponent] = useState([]);
   const [showModalExtraComponent, setShowModalExtraComponent] = useState(false);
-  const [optionValues, setOptionValues] = useState(assetData?.composition ?? []);
-  const [selectedComponents, setSelectedComponents] = useState([]);
-
-  console.log(assetData);
+  const [optionValues, setOptionValues] = useState([]);
+  const [selectedComponents, setSelectedComponents] = useState([0]);
+  const [mappedComponents, setMappedComponents] = useState();
 
   useEffect(() => {
     setFormData(assetData?.data ?? emptyForm);
+    setMappedComponents(assetData?.data?.composition);
   }, [assetData]);
-
   const totalComposition = selectedComponents.reduce((total, key) => {
     if (
       optionValues[key] != null &&
@@ -61,43 +63,22 @@ const AppConfiguration = ({ assetData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    const parsed_value = parseFloat(value);
+    const newValue = isNaN(parsed_value) ? value : parsed_value;
+
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: newValue,
     }));
   };
-
-  console.log(optionValues);
-  console.log(selectedComponents);
-
-
-  function ParseForm(obj) {
-    for (const key in obj) {
-      const floatValue = parseFloat(obj[key]);
-      if (!isNaN(floatValue)) {
-        obj[key] = floatValue;
-      }
-    }
-    return obj;
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const filteredData = Object.keys(optionValues)
-      .filter(key => selectedComponents.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = optionValues[key];
-        return obj;
-      }, {});
-    console.log(filteredData);
-
-    formData.composition = filteredData;
+    formData.composition = optionValues;
     console.log(formData);
-    const parsedData = ParseForm(formData);
 
     try {
-      const response = await axios.post("/api/assets/CreateAsset", parsedData);
+      const response = await axios.post("/api/assets/CreateAsset", formData);
       console.log("Response:", response.data);
       setStatusText("Created");
       window.location.href = "/";
@@ -105,25 +86,20 @@ const AppConfiguration = ({ assetData }) => {
       console.error("Error:", error);
     }
   };
-
-  async function saveComponent(data) {
-    console.log("Save Component", data);
+  function saveComponent(data) {
+    setExtraComponent(data);
     setShowModalExtraComponent(false);
-    try {
-      const response = await axios.post("/api/emissionsapi2-colwest2/v1/AddComponent", data);
-      console.log("Response:", response.data);
-      setStatusText("Created");
-    } catch (error) {
-      console.error("Error:", error);
-    }
   }
 
-
+  function saveComponent(data) {
+    setExtraComponent(data);
+    setShowModalExtraComponent(false);
+  }
   return (
     <form onSubmit={handleSubmit} href="/" className="fullSize">
       <CustomGrid
         cols={5}
-        rows={11}
+        rows={12}
         className={"Overview-100"}
         style={{ justifyContent: "space-between" }}
       >
@@ -149,39 +125,53 @@ const AppConfiguration = ({ assetData }) => {
             <option value="Flare Baja">Flare Baja</option>
           </select>
         </GridElement>
-        <GridElement className="grid-cell-white vert" cols={1} rows={10}>
-          <h4 style={{ margin: "10px" }}>Flare Components Composition</h4>
-          <ComponentSelector
-            optionValues={optionValues}
-            setOptionValues={setOptionValues}
-            onSelect={handleSelect}
-            teaValues={assetData}
-          />
-          <div>
-            <br></br>
-            <Button onClick={() => setShowModalExtraComponent(true)}>
-              {" "}
-              Add Component{" "}
-            </Button>
-            <br></br>
 
-            <span> Total Composition: </span>
-            {totalComposition.toFixed(2)}
-            <br></br>
-            <div className="tooltip-container">
-              <div
-                className="tooltip-content"
-                data-tooltip="Información de ayuda"
-              >
-                The total composition should be 100%, but if it's not, you
-                should keep the diference lower than 1.5%
+        <GridElement className="grid-cell-white vert" cols={1} rows={11}>
+          <GridElement cols={1} rows={2} ns>
+            <h4 style={{ margin: "10px" }}>Flare Components Composition</h4>
+          </GridElement>
+          {!mappedComponents ? (
+            <>
+              <ComponentSelector
+                optionValues={optionValues}
+                setOptionValues={setOptionValues}
+                onSelect={handleSelect}
+              />
+              <div>
+                <br></br>
+                <Button onClick={() => setShowModalExtraComponent(true)}>
+                  {" "}
+                  Add Component{" "}
+                </Button>
+                <br></br>
+
+                <span> Total Composition: </span>
+                {totalComposition.toFixed(2)}
+                <br></br>
+                <div className="tooltip-container">
+                  <div
+                    className="tooltip-content"
+                    data-tooltip="Información de ayuda"
+                  >
+                    The total composition should be 100%, but if it's not, you
+                    should keep the diference lower than 1.5%
+                  </div>
+                  <div className="content">
+                    {" "}
+                    <img src="./info.png" width={35} />
+                  </div>
+                </div>
               </div>
-              <div className="content">
+            </>
+          ) : (
+            <GridElement cols={1} rows={8} ns>
+              <h6>
                 {" "}
-                <img src="./info.png" width={35} />
-              </div>
-            </div>
-          </div>
+                You already have the Flare Components Composition data from the
+                connection mananger{" "}
+              </h6>
+            </GridElement>
+          )}
         </GridElement>
         <GridElement className="grid-cell-white justified" rows={1} cols={2}>
           <span>Wind Speed (m/s): * </span>
@@ -202,7 +192,9 @@ const AppConfiguration = ({ assetData }) => {
             onChange={handleChange}
           >
             <option value="Flare Combinada">Flare Combinada</option>
-            <option value="Flare Asistida por aire">Flare Asistida por aire</option>
+            <option value="Flare Asistida por aire">
+              Flare Asistida por aire
+            </option>
             <option value="Flare Asistida por vapor">
               Flare Asistida por vapor
             </option>
@@ -369,9 +361,9 @@ const AppConfiguration = ({ assetData }) => {
           />
         </GridElement>
         <GridElement className="grid-cell-white justified" rows={1} cols={2}>
-          <span>Combustion Emissions</span>
+          <span>Combustion Efficiency</span>
           <input
-            type="text"
+            type="number"
             name="CombustionEfficiency"
             placeholder=""
             value={formData.CombustionEfficiency}
@@ -381,10 +373,30 @@ const AppConfiguration = ({ assetData }) => {
         <GridElement className="grid-cell-white justified" rows={1} cols={2}>
           <span>Destruction efficiency:</span>
           <input
-            type="text"
+            type="number"
             name="DestructionEfficiency"
             placeholder=""
             value={formData.DestructionEfficiency}
+            onChange={handleChange}
+          />
+        </GridElement>
+        <GridElement className="grid-cell-white justified" rows={1} cols={2}>
+          <span>Span</span>
+          <input
+            type="text"
+            name="Span"
+            placeholder=""
+            value={formData.Span}
+            onChange={handleChange}
+          />
+        </GridElement>
+        <GridElement className="grid-cell-white justified" rows={1} cols={2}>
+          <span>Error:</span>
+          <input
+            type="text"
+            name="InstrumentalError"
+            placeholder=""
+            value={formData.InstrumentalError}
             onChange={handleChange}
           />
         </GridElement>
