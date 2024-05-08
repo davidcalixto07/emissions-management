@@ -25,28 +25,44 @@ const SimulationView = ({ averages }) => {
       data: [actualEmissions, averageEmissions.co2Eq ?? 0],
     },
   ];
-  const [comp, setComp] = useState([
-    85.4305, 8.5901, 2.7031, 0.1882, 0.2777, 0.0, 0.0359, 0.0207, 0.0263,
-    0.0048, 0.0014, 0.0016, 0, 0.8757, 2.1649, 0,
-  ]);
+  const [comp, setComp] = useState({
+    C1: 85.4305,
+    C10: 0,
+    C2: 8.5901,
+    C3: 2.7031,
+    C4: 0.2777,
+    C5: 0.0207,
+    C6: 0.0263,
+    C7: 0.0048,
+    C8: 0.0014,
+    C9: 0.0016,
+    CO2: 0.08757,
+    H2O: 0,
+    "I-C4": 0.1882,
+    "I-C5": 0.0359,
+    "N-C5": 0,
+    N2: 2.1649,
+  });
 
   useEffect(() => {
     console.log("CalcSumEffect");
-    CalcSum(comp);
+    CalcSum(Object.values(comp));
   }, []);
+
+  console.log(averages);
 
   useEffect(() => {
-    setFlow(averages?.flow.avg);
-    setPressure(averages?.pressure.avg);
-    setTemperature(averages?.temperature.avg);
+    setFlow(averages?.flow?.avg);
+    setPressure(averages?.pressure?.avg);
+    setTemperature(averages?.temperature?.avg);
     CalculateEmissions(
-      averages?.flow.avg,
-      averages?.pressure.avg,
-      averages?.temperature.avg
+      averages?.flow?.avg,
+      averages?.pressure?.avg,
+      averages?.temperature?.avg
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  }, [averages]);
+  console.log(flow, pressure, temperature);
   useEffect(() => {
     if (
       actualEmissions ||
@@ -66,7 +82,7 @@ const SimulationView = ({ averages }) => {
       temperature: parseFloat(temperature),
       wind: 4,
       diameter: 9.1,
-      comp: comp,
+      composition: comp,
     };
 
     if (parseFloat(f)) {
@@ -86,6 +102,7 @@ const SimulationView = ({ averages }) => {
             Nox: Nox.toFixed(4),
             So2: 0,
           };
+          console.log(emissions);
           setAverageEmissions(emissions);
         }
       })
@@ -123,25 +140,25 @@ const SimulationView = ({ averages }) => {
 
     switch (e.target.name) {
       case "C1":
-        compTemp[0] = parseFloat(e.target.value);
+        compTemp.C1 = parseFloat(e.target.value);
         break;
       case "C2":
-        compTemp[1] = parseFloat(e.target.value);
+        compTemp.C2 = parseFloat(e.target.value);
         break;
       case "C3":
-        compTemp[2] = parseFloat(e.target.value);
+        compTemp.C3 = parseFloat(e.target.value);
         break;
       case "I-C4":
-        compTemp[3] = parseFloat(e.target.value);
+        compTemp["I-C4"] = parseFloat(e.target.value);
         break;
       case "C4":
-        compTemp[4] = parseFloat(e.target.value);
+        compTemp.C4 = parseFloat(e.target.value);
         break;
       case "C5":
-        compTemp[5] = parseFloat(e.target.value);
+        compTemp.C5 = parseFloat(e.target.value);
         break;
       default:
-        compTemp[12] = parseFloat(e.target.value);
+        compTemp.C10 = parseFloat(e.target.value);
         break;
     }
     setComp(compTemp);
@@ -172,7 +189,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>C1:</span>
                 <input
-                  value={comp[0]}
+                  value={comp.C1}
                   onChange={handleChangeComp}
                   name="C1"
                   type="number"
@@ -181,7 +198,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>C2:</span>
                 <input
-                  value={comp[1]}
+                  value={comp.C2}
                   onChange={handleChangeComp}
                   name="C2"
                   type="number"
@@ -190,7 +207,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>C3:</span>
                 <input
-                  value={comp[2]}
+                  value={comp.C3}
                   onChange={handleChangeComp}
                   name="C3"
                   type="number"
@@ -199,7 +216,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>I-C4:</span>
                 <input
-                  value={comp[3]}
+                  value={comp["I-C4"]}
                   onChange={handleChangeComp}
                   name="I-C4"
                   type="number"
@@ -208,7 +225,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>C4:</span>
                 <input
-                  value={comp[4]}
+                  value={comp.C4}
                   onChange={handleChangeComp}
                   name="C4"
                   type="number"
@@ -217,7 +234,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>C5:</span>
                 <input
-                  value={comp[5]}
+                  value={comp.C5}
                   onChange={handleChangeComp}
                   name="C5"
                   type="number"
@@ -226,7 +243,7 @@ const SimulationView = ({ averages }) => {
               <div className="CompParameter">
                 <span>C6+:</span>
                 <input
-                  value={comp[12]}
+                  value={comp.C10}
                   onChange={handleChangeComp}
                   name="C10"
                   type="number"

@@ -42,6 +42,7 @@ const EmissionsAppV2 = () => {
   const { teasList, setSidebarList, coordinates, imageSrc, loading, alarms } =
     useEmissionsV2(dates);
 
+    
   const nav = useNavigate();
   const { assetId } = useParams();
 
@@ -50,7 +51,6 @@ const EmissionsAppV2 = () => {
     setSidebarList(list);
     console.warn("Set Asset List", list);
   }
-
   function HandleAssetSelected(asset) {
     setSelectedAsset(asset);
     if (asset) {

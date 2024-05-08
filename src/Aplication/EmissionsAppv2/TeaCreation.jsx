@@ -195,6 +195,9 @@ const AppConfiguration = ({ assetData }) => {
             <option value="Flare Asistida por aire">
               Flare Asistida por aire
             </option>
+            <option value="Flare Asistida por aire">
+              Flare Asistida por aire
+            </option>
             <option value="Flare Asistida por vapor">
               Flare Asistida por vapor
             </option>
@@ -344,7 +347,7 @@ const AppConfiguration = ({ assetData }) => {
           <span>Max Flow Emissions</span>
           <input
             type="text"
-            name="MaximumEfficiency"
+            name="MaxEfficiency"
             placeholder=""
             value={formData.MaxEfficiency}
             onChange={handleChange}
@@ -354,7 +357,7 @@ const AppConfiguration = ({ assetData }) => {
           <span>Minimum efficiency per Flare:</span>
           <input
             type="text"
-            name="MinimumEfficiency"
+            name="MinEfficiency"
             placeholder=""
             value={formData.MinEfficiency}
             onChange={handleChange}

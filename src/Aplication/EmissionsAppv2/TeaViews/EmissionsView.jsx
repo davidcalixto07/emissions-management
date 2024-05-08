@@ -47,14 +47,11 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
 
     // Calculations
     setCalculations(data.calculations ?? {});
-    console.log(data.data);
-    setCalcs(data.data);
-    setGases(Object.keys(data.calculations.emissions[model] ?? {}));
-
+    setGases(Object.keys(data.calculations?.emissions[model] ?? {}));
     setTimeseries(data.timeSerie);
     console.log("New data", data);
+    setCalcs(calculations);
   }, [data, lastTs]);
-
   function generateFutureDates(startISOString, numberOfDates) {
     let datesArray = [];
     let currentDate = new Date(startISOString);
@@ -157,24 +154,33 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           metrics={[
             {
               name: "average",
-              value: units.emissions.conv(
-                calculations.emissions[model]?.CO2e.avg ?? 0
-              ),
-              units: units.emissions.name,
+              value:
+                units.emissions?.conv &&
+                calculations?.emissions?.[model]?.CO2e?.avg
+                  ? units.emissions.conv(calculations.emissions[model].CO2e.avg)
+                  : 0,
+              units: units.emissions?.name,
             },
             {
               name: "peak",
-              value: units.emissions.conv(
-                calculations.emissions[model]?.CO2e.max ?? 0
-              ),
-              units: units.emissions.name,
+              value:
+                units.emissions?.conv &&
+                calculations?.emissions?.[model]?.CO2e?.max
+                  ? units.emissions.conv(calculations.emissions[model].CO2e.max)
+                  : 0,
+
+              units: units.emissions?.name,
             },
             {
               name: "Total",
-              value: units.emissions.conv(
-                calculations.emissions[model]?.CO2e.total ?? 0
-              ),
-              units: units.emissions.name,
+              value:
+                units.emissions?.conv &&
+                calculations?.emissions?.[model]?.CO2e?.total
+                  ? units.emissions.conv(
+                      calculations.emissions[model].CO2e.total
+                    )
+                  : 0,
+              units: units.emissions?.name,
             },
           ]}
           decimals={3}
@@ -192,7 +198,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           <option value={"west"}>West </option>
           <option value={"anh"}>ANH</option>
           <option value={"em_factor"}>Emissions Factor</option>
-          <option value={"direct"}>Direct </option>
+          <option value={"direct"}>Direct</option>
         </select>
         Variable:
         <select
@@ -213,12 +219,34 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
         className="grid-cell-white"
         style={{ justifyContent: "center" }}
       >
+        {console.log(timeseries.map((t) => t.emissions["direct"]))}
         {(data.data?.status?.[model] ?? []).length < 1 ? (
-          <EmissionsPlot
-            timestamps={timeseries.map((t) => t._time)}
-            modelsData={timeseries.map((t) => t.emissions[model])}
-            units={"TCO2e"}
-          />
+          timeseries.map((t) => t.emissions[model]).length < 1 ? (
+            <div className="tooltip-container">
+              <div
+                className="tooltip-content"
+                data-tooltip="Información de ayuda"
+              >
+                Please select a diferent dates, these days has no data for this
+                model
+                {data.data?.status?.[model]?.map((ds) => (
+                  <div> {ds}</div>
+                ))}
+              </div>
+              <div className="content">
+                {" "}
+                <img src="./info.png" width={35} />
+              </div>
+            </div>
+          ) : (
+            <EmissionsPlot
+              timestamps={timeseries.map((t) => t._time)}
+              modelsData={timeseries.map((t) =>
+                t.emissions[model] ? t.emissions[model] : []
+              )}
+              units={"TCO2e"}
+            />
+          )
         ) : (
           <div className="tooltip-container">
             <div
@@ -312,29 +340,50 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
           metrics={[
             {
               name: "average",
-              value: units.emissions.conv(
-                calculations.emissions[model]?.[
+              value:
+                units.emissions?.conv &&
+                calculations?.emissions?.[model]?.[
                   gas === "All" || gas === "efficiency" ? "CO2" : gas
-                ].avg ?? 0
-              ),
+                ]?.avg
+                  ? units.emissions.conv(
+                      calculations.emissions[model][
+                        gas === "All" || gas === "efficiency" ? "CO2" : gas
+                      ].avg
+                    )
+                  : 0,
+
               units: units.emissions.name,
             },
             {
               name: "peak",
-              value: units.emissions.conv(
-                calculations.emissions[model]?.[
+              value:
+                units.emissions?.conv &&
+                calculations?.emissions?.[model]?.[
                   gas === "All" || gas === "efficiency" ? "CO2" : gas
-                ].max ?? 0
-              ),
+                ]?.max
+                  ? units.emissions.conv(
+                      calculations.emissions[model][
+                        gas === "All" || gas === "efficiency" ? "CO2" : gas
+                      ].max
+                    )
+                  : 0,
+
               units: units.emissions.name,
             },
             {
               name: "Total",
-              value: units.emissions.conv(
-                calculations.emissions[model]?.[
+              value:
+                units.emissions?.conv &&
+                calculations?.emissions?.[model]?.[
                   gas === "All" || gas === "efficiency" ? "CO2" : gas
-                ].total ?? 0
-              ),
+                ]?.total
+                  ? units.emissions.conv(
+                      calculations.emissions[model][
+                        gas === "All" || gas === "efficiency" ? "CO2" : gas
+                      ].total
+                    )
+                  : 0,
+
               units: units.emissions.name,
             },
           ]}

@@ -28,12 +28,13 @@ const TeaView = () => {
 
   useEffect(() => {
     if (!selectedAsset) return;
+    if (!selectedAsset) return;
 
     const flare = teasList.find((x) => x.assetId == selectedAsset.assetId);
     if (flare) {
       console.log("Finded ", flare);
       setAssetData(flare);
-      setLastTs(flare.timeSerie[flare.timeSerie.length - 1]._time);
+      setLastTs(flare.timeSerie[flare.timeSerie.length - 1]?._time);
     }
   }, [selectedAsset, teasList]);
   console.log(results);
