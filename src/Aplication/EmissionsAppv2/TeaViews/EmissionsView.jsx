@@ -219,7 +219,6 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
         className="grid-cell-white"
         style={{ justifyContent: "center" }}
       >
-        {console.log(timeseries.map((t) => t.emissions["direct"]))}
         {(data.data?.status?.[model] ?? []).length < 1 ? (
           timeseries.map((t) => t.emissions[model]).length < 1 ? (
             <div className="tooltip-container">
@@ -227,7 +226,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
                 className="tooltip-content"
                 data-tooltip="Información de ayuda"
               >
-                Please select a diferent dates, these days has no data for this
+                Please select diferents dates, these days has no data for this
                 model
                 {data.data?.status?.[model]?.map((ds) => (
                   <div> {ds}</div>
