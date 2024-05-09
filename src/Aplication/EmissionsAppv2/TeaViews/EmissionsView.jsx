@@ -51,7 +51,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
     setTimeseries(data.timeSerie);
     console.log("New data", data);
     setCalcs(calculations);
-  }, [data, lastTs]);
+  }, [data, lastTs, model]);
   function generateFutureDates(startISOString, numberOfDates) {
     let datesArray = [];
     let currentDate = new Date(startISOString);
@@ -325,7 +325,7 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
         <MetricView
           title={"Efficiencies "}
           metrics={[
-            { name: "Combustion efficiency", value: 5.3, units: "m/s" },
+            { name: "Combustion efficiency", value: 98.6, units: "%" },
             { name: "Destruction efficiency", value: 98.6, units: "%" },
           ]}
         />

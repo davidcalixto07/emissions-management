@@ -63,7 +63,7 @@ const TeaView = () => {
         />
       </AppTab>
       <AppTab label={"Forecasting"}>
-        <Forecast />
+        <Forecast data={assetData} setDates={setDates} />
       </AppTab>
       <AppTab label="Emissions Simulator">
         <SimulationView averages={results} />
