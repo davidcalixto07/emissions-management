@@ -16,11 +16,9 @@ const ReporterGenerator = () => {
     batteryFacility: "",
     opeartorName: "",
     contractName: "",
-    fieldNames: {
-      fieldName1: "",
-      fieldName2: "",
-      fieldName3: "",
-    },
+    fieldName1: "",
+    fieldName2: "",
+    fieldName3: "",
     annexes: "",
     technicalManagerOperator: "",
     professionalCardNumber: "",
@@ -56,7 +54,7 @@ const ReporterGenerator = () => {
         <span title="Campo Obligatorio"> Report Number: * </span>
         <input
           type="number"
-          name="reportNumber"
+          name="field"
           placeholder="001"
           value={InfoReport.reportNumber}
           onChange={handleChange}
@@ -137,7 +135,7 @@ const ReporterGenerator = () => {
           type="text"
           name="fieldName1"
           placeholder="Campo1"
-          value={InfoReport.fieldNames.fieldName1}
+          value={InfoReport.fieldName1}
           onChange={handleChange}
           required
         />
@@ -148,7 +146,7 @@ const ReporterGenerator = () => {
           type="text"
           name="fieldName2"
           placeholder="Campo2"
-          value={InfoReport.fieldNames.fieldName2}
+          value={InfoReport.fieldName2}
           onChange={handleChange}
           required
         />
@@ -159,7 +157,7 @@ const ReporterGenerator = () => {
           type="text"
           name="fieldName3"
           placeholder="Campo3"
-          value={InfoReport.fieldNames.fieldName3}
+          value={InfoReport.fieldName3}
           onChange={handleChange}
           required
         />

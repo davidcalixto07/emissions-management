@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GridElement from "../../Aplication/Utils/GridElement";
 import DeleteIcon from "../AssetsSidebar/trash-can-icon.png";
 import MapComponent from "./MapComponent";
 import Alerts from "../Alerts/Alerts";
 import { Button } from "react-bootstrap";
+
 const Datapoint = ({
   datapoint,
   handleDataPointClick,
@@ -17,6 +18,7 @@ const Datapoint = ({
   showModalMapComponents,
   setShowModalMapComponents,
 }) => {
+  console.log(dataMappingComponents);
   const [showAlert, setShowAlert] = useState(false);
   return datapoint.variable !== "Components" ? (
     <>
