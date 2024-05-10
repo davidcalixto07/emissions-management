@@ -20,7 +20,7 @@ const MultiTimeseries = ({ values, label, max, zero, freeRatio, units, maxTicks 
                 data: datavalues,
                 borderColor: element.color ?? '#0f2d57',
                 backgroundColor: element.Bcolor ?? '#0f2d5760',
-                borderWidth: 1.4,
+                borderWidth: element.borderWidth ?? 1.4,
                 fill: element.f ?? false,
                 pointRadius: element.pointRadius ?? 0.1,
             }
