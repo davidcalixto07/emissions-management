@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+
 import {
   Document,
   Page,
@@ -12,100 +12,7 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 
-const jsonData = {
-  Generales: {
-    numeroReporte: 1840,
-    fecha: new Date().toDateString(),
-    Fbateria: "TipoA",
-    latitud: "4.60971",
-    longitud: "-74.08175",
-    operador: "Esteban Sanchez",
-    NombreCon: "TEA2024",
-    NombreCampo: { campo1: "Campo A", campo2: "Campo B", campo3: "Campo C" },
-  },
-  TEAS: [
-    {
-      id: "TEA001",
-      altura: "10",
-      diametro: "1",
-      Ainstalacion: "2014",
-      Ffun: "60",
-      Hfun: "2",
-      Segmento: "A",
-      medicion: "manual",
-      medidor: "manual",
-      serial: "xzer21",
-      vgqocp: "20",
-      vgqpi: "15",
-      vgnqpe: "15",
-      vgqgp: "12",
-      vgqpp: "10",
-      vgqev: "8",
-      gvirc: "3",
-      qpenp: "2",
-      fe: "0.5",
-      Tr: "0.3",
-      FF: "3",
-      vgqenp: "2",
-      qppp: "3",
-      KPCA: "200",
-      CE: "20",
-      DRE: "30",
-      C1: "20",
-      C2: "20",
-      C3: "20",
-      C4: "20",
-      C5: "20",
-      "C6+": "20",
-      H2: "20",
-      C02: "20",
-      ECO2: "20",
-      ECH4: "20",
-      EN20: "20",
-      ECO2e: "200",
-    },
-    {
-      id: "",
-      altura: "",
-      diametro: "",
-      Ainstalacion: "",
-      Ffun: "",
-      Hfun: "2",
-      Segmento: "A",
-      medicion: "manual",
-      medidor: "manual",
-      serial: "xzer21",
-      vgqocp: "20",
-      vgqpi: "15",
-      vgnqpe: "15",
-      vgqgp: "12",
-      vgqpp: "10",
-      vgqev: "8",
-      gvirc: "3",
-      qpenp: "2",
-      fe: "0.5",
-      Tr: "0.3",
-      FF: "3",
-      vgqenp: "2",
-      qppp: "3",
-      KPCA: "200",
-      CE: "20",
-      DRE: "30",
-      C1: "20",
-      C2: "20",
-      C3: "20",
-      C4: "20",
-      C5: "20",
-      "C6+": "20",
-      H2: "20",
-      C02: "20",
-      ECO2: "20",
-      ECH4: "20",
-      EN20: "20",
-      ECO2e: "200",
-    },
-  ],
-};
+
 
 const styles = StyleSheet.create({
   page: {
@@ -182,10 +89,10 @@ const styles = StyleSheet.create({
 
 const Reporter = () => {
   const nav = useNavigate();
-  const { data, teasList } = useOutletContext();
+  const { data, teasList }  = useOutletContext();
 
-  console.log(teasList);
   console.log(data);
+  console.log(teasList); 
   return (
     <div style={{ width: "100%" }}>
       <Button onClick={() => nav("/")}>Back to overview</Button>
@@ -193,7 +100,7 @@ const Reporter = () => {
         <Document>
           <Page
             orientation="landscape"
-            size={{ width: 780, height: 1980 }}
+            size={{ width: 850, height: 1980 }}
             style={styles.page}
           >
             <View style={styles.section}>
@@ -227,13 +134,13 @@ const Reporter = () => {
                     <Text>Número de Reporte: </Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.numeroReporte}</Text>
+                    <Text>{data.reportNumber}</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text>Fecha de presentación (dd/mm/aaaa): </Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.fecha}</Text>
+                    <Text></Text>
                   </View>
                 </View>
                 {/*Fila 2*/}
@@ -242,7 +149,7 @@ const Reporter = () => {
                     <Text>Facilidad de Batería</Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.Fbateria}</Text>
+                    <Text>{data.batteryFacility}</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text>Ubicación en coordenadas</Text>
@@ -251,13 +158,13 @@ const Reporter = () => {
                     <Text>Latitud</Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.latitud}</Text>
+                    <Text></Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text>Longitud</Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.longitud}</Text>
+                    <Text></Text>
                   </View>
                 </View>
                 {/*Fila 3*/}
@@ -266,13 +173,13 @@ const Reporter = () => {
                     <Text>Operador</Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.operador}</Text>
+                    <Text>{data.opeartorName}</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text>Nombre de los Contratos: </Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text>{jsonData.Generales.NombreCon}</Text>
+                    <Text>{data.contractName}</Text>
                   </View>
                 </View>
                 {/*Fila 4*/}
@@ -280,9 +187,9 @@ const Reporter = () => {
                   <View style={styles.tableCell}>
                     <Text>
                       Nombre de los Campos:
-                      {jsonData.Generales.NombreCampo.campo1},
-                      {jsonData.Generales.NombreCampo.campo2},
-                      {jsonData.Generales.NombreCampo.campo3}
+                      {data.fieldNames.fieldname1},
+                      {data.fieldNames.fieldname2},
+                      {data.fieldNames.fieldname3}
                     </Text>
                   </View>
                 </View>
@@ -310,10 +217,10 @@ const Reporter = () => {
                     <Text style={styles.text1}>ID TEA</Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text style={styles.text1}>ID TEA</Text>
+                    <Text style={styles.text1}>Tipo de TEA</Text>
                   </View>
                   <View style={styles.tableCell}>
-                    <Text style={styles.text1}>ID TEA</Text>
+                    <Text style={styles.text1}>Tecnología de la TEA</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text style={styles.text1}>Altura TEA (ft)</Text>
@@ -350,85 +257,46 @@ const Reporter = () => {
                   </View>
                 </View>
                 {/*Contenido 1*/}
-                {jsonData.TEAS.map((flare) => (
+                {teasList.map((flare) => (
                   <View style={styles.tableRow}>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.id} </Text>
+                      <Text style={styles.text1}>{flare.data.flareId}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}> </Text>
+                      <Text style={styles.text1}>{flare.data.flareType}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}></Text>
+                      <Text style={styles.text1}>{flare.data.tecnology}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.altura}</Text>
+                      <Text style={styles.text1}> {flare.data.height}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.diametro}</Text>
+                      <Text style={styles.text1}>{flare.data.diameter}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.Ainstalacion}</Text>
+                      <Text style={styles.text1}>{flare.data.instalationYear}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.Ffun}</Text>
+                      <Text style={styles.text1}>{/*flare.data.frecuencia_funcionamiento*/}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.Hfun}</Text>
+                      <Text style={styles.text1}>{flare.data.estimatedHours}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.Segmento}</Text>
+                      <Text style={styles.text1}>{flare.data.segment}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.medicion}</Text>
+                      <Text style={styles.text1}>{flare.data.measureMethod}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.medidor}</Text>
+                      <Text style={styles.text1}>{flare.data.measureType}</Text>
                     </View>
                     <View style={styles.tableCell}>
-                      <Text style={styles.text1}>{flare.serial}</Text>
+                      <Text style={styles.text1}>{flare.data.transmitterSerial}</Text>
                     </View>
                   </View>
                 ))}
-                {/*Contenido 1-2*/}
-                <View style={styles.tableRow}>
-                  <View style={styles.tableCell}>
-                    <Text> </Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text></Text>
-                  </View>
-                </View>
                 {/*Titulo 2*/}
                 <View
                   style={{
@@ -437,9 +305,8 @@ const Reporter = () => {
                   }}
                 >
                   <View style={styles.tableCell}>
-                    <Text style={{ textAlign: "center" }}>
-                      SECCIÓN II. QUEMA DE GAS NATURAL EN EXPLORACIÓN DE
-                      HIDROCARBUROS
+                    <Text style={styles.text2}>
+                    SECCIÓN II. QUEMA DE GAS NATURAL EN EXPLORACIÓN DE HIDROCARBUROS
                     </Text>
                   </View>
                 </View>
@@ -472,50 +339,22 @@ const Reporter = () => {
                   </View>
                 </View>
                 {/*contenido 2*/}
-                <View style={styles.tableRow}>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].id}</Text>
+                {teasList.map((flare) => (
+                  <View style={styles.tableRow}>
+                    <View style={styles.tableCell}>
+                      <Text style={styles.text1}>{flare.data.flareId} </Text>
+                    </View>
+                    <View style={styles.tableCell}>
+                      <Text style={styles.text1}>{/*flare.data.KPCoperacion*/}</Text>
+                    </View>
+                    <View style={styles.tableCell}>
+                      <Text style={styles.text1}>{/*flare.data.KPCexploracion*/}</Text>
+                    </View>
+                    <View style={styles.tableCell}>
+                      <Text style={styles.text1}>{/*flare.data.KPCpruebaslargas*/}</Text>
+                    </View>
                   </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].vgqocp}</Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].vgqpi}</Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].vgnqpe}</Text>
-                  </View>
-                </View>
-                {/*contenido 2.1*/}
-                <View style={styles.tableRow}>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}></Text>
-                  </View>
-                </View>
-                {/*contenido 2.2*/}
-                <View style={styles.tableRow}>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}></Text>
-                  </View>
-                  <View style={styles.tableCell}>
-                    <Text style={styles.text1}></Text>
-                  </View>
-                </View>
+                    ))}
                 {/*Titulo 3*/}
                 <View
                   style={{
@@ -661,114 +500,43 @@ const Reporter = () => {
                   </View>
                 </View>
                 {/*cONTENIDO 3*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].id}</Text>
+                {teasList.map((flare) => (
+                  <View style={{ ...styles.tableRow }}>
+                    <View style={{ ...styles.tableRow3, width: "8%" }}>
+                      <Text style={styles.text1}>{flare.data.flareId}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.quemapurga*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.quemapilotos*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "15%" }}>
+                      <Text style={styles.text1}>{/*flare.data.quema_no_viable*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "8%" }}>
+                      <Text style={styles.text1}>{/*flare.data.gasventeo*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "8%" }}>
+                      <Text style={styles.text1}>{/*flare.data.quemaeventos_planeados*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "9.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.factoreiciencia*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "9.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.factor_Reduccion*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "9.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.fe*tr*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "9.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.quema_eventos_NO_planeados*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "8%" }}>
+                      <Text style={styles.text1}>{/*flare.data.quema_PERMISO*/}</Text>
+                    </View>
                   </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].vgqgp}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].vgqpp}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "15%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].vgqev} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].gvirc}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].qpenp}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].fe} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].Tr}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].FF} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].vgqenp} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].qppp}</Text>
-                  </View>
-                </View>
-                {/*cONTENIDO 3.1*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "15%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-                {/*cONTENIDO 3.2*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "15%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "9.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-
+                  ))}
                 {/*TITULO 4*/}
                 <View
                   style={{
@@ -777,9 +545,8 @@ const Reporter = () => {
                   }}
                 >
                   <View style={styles.tableCell}>
-                    <Text style={{ textAlign: "center" }}>
-                      SECCIÓN IV. RELACIÓN DE EMISIONES DE GASES DE EFECTO
-                      INVERNADERO
+                    <Text style={styles.text2}>
+                    SECCIÓN IV. RELACIÓN DE EMISIONES DE GASES DE EFECTO INVERNADERO
                     </Text>
                   </View>
                 </View>
@@ -855,392 +622,70 @@ const Reporter = () => {
                     </Text>
                   </View>
                 </View>
-                {/*Contenido  4.1*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].id} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}>
-                      {jsonData.TEAS[0].Segmento}{" "}
-                    </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].KPCA}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].CE}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].DRE} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].C1}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].C2}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].C3} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].C4}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].C5} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0]["C6+"]}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].H2} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].C02} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].ECO2}</Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].ECH4} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}>{jsonData.TEAS[0].EN20} </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> {jsonData.TEAS[0].ECO2e} </Text>
-                  </View>
-                </View>
-                {/*Contenido  4.2*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-                {/*Contenido  4.3*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-                {/*Contenido  4.4*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-                {/*Contenido  4.5*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-                {/*Contenido  4.6*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
-                {/*Contenido  4.7*/}
-                <View style={{ ...styles.tableRow }}>
-                  <View style={{ ...styles.tableRow3, width: "8%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "4%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                  <View style={{ ...styles.tableRow3, width: "7.5%" }}>
-                    <Text style={styles.text1}> </Text>
-                  </View>
-                </View>
+                {/*Contenido  4*/}
+                {teasList.map((flare) => (
+                  <View style={{ ...styles.tableRow }}>
+                    <View style={{ ...styles.tableRow3, width: "8%" }}>
+                      <Text style={styles.text1}>{flare.data.flareId} </Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{flare.data.segment} </Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.kpca*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}> {/*flare.data.eficieciaCE*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}> {/*flare.data.eficieciaDRE*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.C1}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.C2}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.C3}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.C4}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.C5}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.C6}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.N2}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "4%" }}>
+                      <Text style={styles.text1}>{flare.data.composition.CO2}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.co2año*/} </Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.CH4año*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.N2OAÑO*/}</Text>
+                    </View>
+                    <View style={{ ...styles.tableRow3, width: "7.5%" }}>
+                      <Text style={styles.text1}>{/*flare.data.CO2eAÑO*/}</Text>
+                    </View>
+                  </View>
+                  ))}
                 <View style={{ ...styles.tableRow3, width: "100%" }}>
                   <Text style={styles.text1}>
                     {" "}
                     Adjuntar certificaciones de eficiencia de TEA, según{" "}
                   </Text>
                 </View>
+
+                {/*TITULO 5*/}
                 <View
                   style={{
                     ...styles.tableRow,
@@ -1253,11 +698,13 @@ const Reporter = () => {
                     </Text>
                   </View>
                 </View>
+                 {/*Contenido  5*/}
                 <View style={styles.tableRow}>
                   <View style={styles.tableCell}>
-                    <Text style={styles.text2}> </Text>
+                    <Text style={styles.text2}> {data.annexes}</Text>
                   </View>
                 </View>
+                 {/*TITULO 6*/}
                 <View
                   style={{
                     ...styles.tableRow,
@@ -1268,11 +715,13 @@ const Reporter = () => {
                     <Text style={styles.text2}>SECCIÓN VI. OBSERVACIONES</Text>
                   </View>
                 </View>
+                 {/*contenido 6*/}
                 <View style={styles.tableRow}>
                   <View style={styles.tableCell}>
                     <Text style={{ textAlign: "center" }}> </Text>
                   </View>
                 </View>
+                 {/*TITULO 7*/}
                 <View
                   style={{
                     ...styles.tableRow,
@@ -1283,6 +732,7 @@ const Reporter = () => {
                     <Text style={styles.text2}>SECCIÓN VII. RESPONSABLES</Text>
                   </View>
                 </View>
+                {/*contenido 7*/}
                 <View style={styles.tableRow}>
                   <View style={styles.tableCell}>
                     <Text style={{ textAlign: "center" }}>
@@ -1297,7 +747,7 @@ const Reporter = () => {
                 </View>
                 <View style={styles.tableRow}>
                   <View style={styles.tableCell}>
-                    <Text style={{ textAlign: "center" }}> </Text>
+                    <Text style={{ textAlign: "center" }}> {data.technicalManagerOperator}</Text>
                   </View>
                   <View style={styles.tableCell}>
                     <Text style={{ textAlign: "center" }}> </Text>

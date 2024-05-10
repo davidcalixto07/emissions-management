@@ -10,7 +10,7 @@ import useEmissionsV2 from "./useEmissionsv2";
 import TeaCreation from "./TeaCreation";
 import "../AppCommonStyles.css";
 import Mapping from "./Mapping";
-import License from "./License";
+import License from "./License/License";
 import Westbot from "../../Componentes/Westbot/Westbot";
 import ReporterMananger from "./Reports/ReporterMananger";
 import Reporter from "./Reports/Reporter";
