@@ -13,7 +13,14 @@ function MapComponent({ show, setShow, saveMapping, data }) {
     C5: "",
   };
   const [mappedComponents, setMappedComponents] = useState(mapComponents);
+  const [gases, setGases] = useState([]);
+  const [values, setValues] = useState([]);
 
+  useEffect(() => {
+    setGases(Object.keys(data));
+    setValues(Object.values(data));
+  }, [data]);
+  console.log(mappedComponents);
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -41,82 +48,26 @@ function MapComponent({ show, setShow, saveMapping, data }) {
             <GridElement rows={1} cols={4} ns>
               <h5>Map components</h5>
             </GridElement>
-            <GridElement
-              className="grid-cell-white justified"
-              rows={1}
-              cols={2}
-              style={{ border: "none" }}
-            >
-              <span>C1:</span>
-              <input
-                type="text"
-                name="C1"
-                placeholder="Node/tag"
-                onChange={handleChange}
-              />
-            </GridElement>
-            <GridElement
-              className="grid-cell-white justified"
-              rows={1}
-              cols={2}
-              style={{ border: "none" }}
-            >
-              <span>C2:</span>
-              <input
-                type="text"
-                name="C2"
-                placeholder="Node/tag"
-                onChange={handleChange}
-              />
-            </GridElement>
-            <GridElement
-              className="grid-cell-white justified"
-              rows={1}
-              cols={2}
-              style={{ border: "none" }}
-            >
-              <span>C3:</span>
-              <input
-                name="C3"
-                type="text"
-                placeholder="Node/Tag"
-                onChange={handleChange}
-              />
-            </GridElement>
-            <GridElement
-              className="grid-cell-white justified"
-              rows={1}
-              cols={2}
-              style={{ border: "none" }}
-            >
-              <span>C4:</span>
-              <input
-                type="text"
-                onChange={handleChange}
-                name="C4"
-                placeholder="Node/tag"
-              />
-            </GridElement>
-            <GridElement
-              className="grid-cell-white justified"
-              rows={1}
-              cols={2}
-              style={{ border: "none" }}
-            >
-              <span>C5:</span>
-              <input
-                type="text"
-                onChange={handleChange}
-                name="C5"
-                placeholder="Node/Tag"
-              />
-            </GridElement>
-            <GridElement
-              rows={1}
-              cols={2}
-              ns
-              style={{ justifyContent: "center" }}
-            ></GridElement>
+
+            {gases.map((t) => (
+              <GridElement
+                className="grid-cell-white justified"
+                style={{
+                  border: "none",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <span> {t} </span>
+                <input
+                  type="number"
+                  name={t}
+                  placeholder="Node/tag"
+                  onChange={handleChange}
+                />
+                <br></br>
+              </GridElement>
+            ))}
           </GridElement>
         </form>
       </Modal.Body>
@@ -126,22 +77,7 @@ function MapComponent({ show, setShow, saveMapping, data }) {
         </Button>
         <Button
           variant="primary"
-          onClick={() =>
-            saveMapping(
-              [
-                {
-                  Components: {
-                    C1: mappedComponents.C1,
-                    C2: mappedComponents.C2,
-                    C3: mappedComponents.C3,
-                    C4: mappedComponents.C4,
-                    C5: mappedComponents.C5,
-                  },
-                },
-              ],
-              setShow(false)
-            )
-          }
+          onClick={() => saveMapping(mappedComponents, setShow(false))}
         >
           Save
         </Button>
