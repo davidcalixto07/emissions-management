@@ -34,7 +34,11 @@ const TeaView = () => {
     if (flare) {
       console.log("Finded ", flare);
       setAssetData(flare);
-      setLastTs(flare.timeSerie[flare.timeSerie.length - 1]?._time);
+      setLastTs(
+        flare.timeSerie
+          ? flare.timeSerie[flare.timeSerie.length - 1]?._time
+          : []
+      );
     }
   }, [selectedAsset, teasList]);
   console.log(results);

@@ -111,21 +111,41 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
 
   return (
     <CustomGrid className={"TeaView"} rows={11} cols={10} loading={loading}>
-      <GridElement rows={6} cols={3} className="grid-cell-white">
-        <MultiTimeseries
-          title={"Produced gas flow"}
-          values={[
-            {
-              label: `flow (${units.flow.name})`,
-              t: data.timeSerie.map((t) => t._time) ?? [],
-              v: data.timeSerie.map((t) => units.flow.conv(t.flow)) ?? [],
-              color: "#0f2d57",
-              f: false,
-              pointRadius: 0,
-            },
-          ]}
-          freeRatio
-        />
+      <GridElement
+        rows={6}
+        cols={3}
+        className="grid-cell-white"
+        style={{ justifyContent: "center" }}
+      >
+        {data.timeSerie ? (
+          <MultiTimeseries
+            title={"Produced gas flow"}
+            values={[
+              {
+                label: `flow (${units.flow.name})`,
+                t: data.timeSerie.map((t) => t._time) ?? [],
+                v: data.timeSerie.map((t) => units.flow.conv(t.flow)) ?? [],
+                color: "#0f2d57",
+                f: false,
+                pointRadius: 0,
+              },
+            ]}
+            freeRatio
+          />
+        ) : (
+          <div className="tooltip-container">
+            <div
+              className="tooltip-content"
+              data-tooltip="Información de ayuda"
+            >
+              You don't have data to show, please map your flow at least
+            </div>
+            <div className="content">
+              {" "}
+              <img src="./info.png" width={35} />
+            </div>
+          </div>
+        )}
       </GridElement>
 
       <GridElement rows={6} cols={3} className="grid-cell-white">

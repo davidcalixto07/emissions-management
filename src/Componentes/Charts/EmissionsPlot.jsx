@@ -9,15 +9,15 @@ Chart.register(...registerables, zoomPlugin);
 function FindColorName(name) {
   switch (name) {
     case "CO2":
-      return "#40d040";
+      return "#191970";
     case "CO2e":
-      return "#f040d0";
+      return "#003366";
     case "CH4":
-      return "#d0d040";
+      return "#1E90FF";
     case "N2":
-      return "#4050d0";
+      return "#87CEFA";
     default:
-      return "#0f2d57";
+      return "#000000";
   }
 }
 
@@ -123,6 +123,10 @@ const EmissionsPlot = ({
           title: {
             display: units,
             text: units ?? "",
+            color: "#00008B",
+          },
+          ticks: {
+            color: "#00008B",
           },
         },
         y1: {
@@ -135,6 +139,10 @@ const EmissionsPlot = ({
           title: {
             display: true,
             text: "T",
+            color: "#1E90FF",
+          },
+          ticks: {
+            color: "#1E90FF",
           },
         },
         y2: {
@@ -149,6 +157,10 @@ const EmissionsPlot = ({
           title: {
             display: true,
             text: "efficiency",
+            color: "BLACK",
+          },
+          ticks: {
+            color: "BLACK",
           },
         },
       },
