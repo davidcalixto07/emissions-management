@@ -5,14 +5,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 function MapComponent({ show, setShow, saveMapping, data }) {
-  const mapComponents = {
-    C1: "",
-    C2: "",
-    C3: "",
-    C4: "",
-    C5: "",
-  };
-  const [mappedComponents, setMappedComponents] = useState(mapComponents);
+  const [mappedComponents, setMappedComponents] = useState([]);
   const [gases, setGases] = useState([]);
   const [values, setValues] = useState([]);
 

@@ -239,7 +239,9 @@ const EmissionsView = ({ data, lastTs, units, loading, setCalcs }) => {
         className="grid-cell-white"
         style={{ justifyContent: "center" }}
       >
-        {(data.data?.status?.[model] ?? []).length < 1 ? (
+        {(data.data?.status?.[model] ?? []).length < 1 &&
+        timeseries !== undefined &&
+        timeseries ? (
           timeseries.map((t) => t.emissions[model]).length < 1 ? (
             <div className="tooltip-container">
               <div

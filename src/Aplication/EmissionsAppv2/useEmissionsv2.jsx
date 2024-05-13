@@ -8,7 +8,6 @@ function useEmissionsV2(dates) {
   const [assetsFlareList, setAssetsFlareList] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     GetFlaresList();
   }, [sidebarList, dates]);
@@ -17,7 +16,6 @@ function useEmissionsV2(dates) {
     const intervalId = setInterval(() => GetFlaresTs(assetsFlareList), 30000);
     return () => clearInterval(intervalId);
   }, [assetsFlareList]);
-
 
   function GetFlaresList() {
     setLoading(true);
@@ -44,15 +42,16 @@ function useEmissionsV2(dates) {
       .catch((error) => {
         console.error("Error fetching image:", error);
       })
-      .finally(() => { });
+      .finally(() => {});
   }
 
   function GetFlaresTs(flareList) {
-    if (!dates.startDate || sidebarList.length == 0)
-      return;
+    if (!dates.startDate || sidebarList.length == 0) return;
     console.log("Calculating for", flareList);
     const isoStartDate = dates.startDate.toISOString();
-    const isoEndDate = dates.endDate ? dates.endDate.toISOString() : new Date(2050, 1, 1).toISOString();
+    const isoEndDate = dates.endDate
+      ? dates.endDate.toISOString()
+      : new Date(2050, 1, 1).toISOString();
 
     const promises = flareList.map(async (flare) => {
       const url = `/api/emissionsapi2-colwest2/v1/ProcessTimeserie?assetId=${flare.assetId}&from=${isoStartDate}&to=${isoEndDate}&model=both`;
@@ -72,7 +71,7 @@ function useEmissionsV2(dates) {
       .then((updatedFlares) => {
         console.log("Teas with fetched data:", updatedFlares);
         setFlares(updatedFlares);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -117,7 +116,7 @@ function useEmissionsV2(dates) {
     const rand2 = Math.floor(Math.random() * flares.length);
 
     if (flares.length > 0) {
-      console.log(flares[rand1].assetId)
+      console.log(flares[rand1].assetId);
       return [
         {
           id: "433",
@@ -133,11 +132,9 @@ function useEmissionsV2(dates) {
           entityId: sidebarList[rand2].assetId,
           description: "Emissions too high",
         },
-      ]
-    }
-    else
-      return []
-  }, [sidebarList])
+      ];
+    } else return [];
+  }, [sidebarList]);
 
   useEffect(() => {
     fetchImage();
@@ -149,6 +146,13 @@ function useEmissionsV2(dates) {
     };
   }, []);
 
-  return { teasList: flares, setSidebarList, coordinates, imageSrc, loading, alarms };
+  return {
+    teasList: flares,
+    setSidebarList,
+    coordinates,
+    imageSrc,
+    loading,
+    alarms,
+  };
 }
 export default useEmissionsV2;

@@ -19,6 +19,8 @@ const SimulationView = ({ averages }) => {
   const [actualEmissions, setActualEmissions] = useState(0);
   const [sum, setSum] = useState(0);
 
+  console.log(actualEmissions);
+
   const barData = [
     {
       label: "Emissions Comparission",
@@ -49,8 +51,6 @@ const SimulationView = ({ averages }) => {
     CalcSum(Object.values(comp));
   }, []);
 
-  console.log(averages);
-
   useEffect(() => {
     setFlow(averages?.flow?.avg);
     setPressure(averages?.pressure?.avg);
@@ -66,12 +66,12 @@ const SimulationView = ({ averages }) => {
   useEffect(() => {
     if (
       actualEmissions ||
-      isNaN(averages?.CO2Emissions?.avg) ||
-      averages?.CO2Emissions?.avg === 0
+      isNaN(averages?.emissions?.west?.CO2e?.avg) ||
+      averages?.emissions?.west?.CO2e?.avg === 0
     )
       return;
     console.log("useEffect actualEmissions");
-    setActualEmissions(averages?.CO2Emissions.avg);
+    setActualEmissions(averages?.emissions?.west?.CO2e?.avg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -90,19 +90,17 @@ const SimulationView = ({ averages }) => {
       frame.pressure = parseFloat(p);
       frame.temperature = parseFloat(t);
     }
-
     axios
       .post("/api/emissionsapi2-colwest2/v1/Calculate", frame)
       .then((response) => {
-        if (response.data["CO2e"]) {
-          const co2Eq = parseFloat(response.data["CO2e"]);
-          const Nox = parseFloat(response.data["C02"]);
+        if (response.data[0].west["CO2e"]) {
+          const co2Eq = parseFloat(response.data[0].west["CO2e"].value);
+          const Nox = parseFloat(response.data[0].west["CO2"].value);
           const emissions = {
             co2Eq: co2Eq.toFixed(4),
             Nox: Nox.toFixed(4),
             So2: 0,
           };
-          console.log(emissions);
           setAverageEmissions(emissions);
         }
       })

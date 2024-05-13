@@ -18,7 +18,6 @@ const Datapoint = ({
   showModalMapComponents,
   setShowModalMapComponents,
 }) => {
-  console.log(dataMappingComponents);
   const [showAlert, setShowAlert] = useState(false);
   return datapoint.variable !== "Components" ? (
     <>
