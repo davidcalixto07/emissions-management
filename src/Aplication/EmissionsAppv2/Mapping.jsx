@@ -50,9 +50,7 @@ const Mapping = () => {
     setDataMapings(res);
     console.log("Updating Mappings", res);
   }
-  console.log(dataMappingComponents);
   console.log("Datamappppppppings", dataMapings);
-  console.log(dataMappingComponents);
   async function handleDataSourceClick(datasource) {
     setSelectedDataSource(datasource);
 

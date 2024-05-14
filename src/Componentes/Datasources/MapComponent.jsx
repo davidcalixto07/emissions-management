@@ -10,10 +10,10 @@ function MapComponent({ show, setShow, saveMapping, data }) {
   const [values, setValues] = useState([]);
 
   useEffect(() => {
-    setGases(Object.keys(data));
-    setValues(Object.values(data));
+    setGases(Object?.keys(data));
+    setValues(Object?.values(data));
   }, [data]);
-  console.log(mappedComponents);
+  console.log(data);
   const handleChange = (e) => {
     const { name, value } = e.target;
 

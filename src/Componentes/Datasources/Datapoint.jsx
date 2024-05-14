@@ -19,8 +19,23 @@ const Datapoint = ({
   setShowModalMapComponents,
 }) => {
   const [showAlert, setShowAlert] = useState(false);
+  const [flareSelectedOnDp, setFlareSelectedOnDp] = useState("none");
+
+  useEffect(() => {
+    setFlareSelectedOnDp(
+      teasList.filter((name) => name.name === datapoint.flare)
+    );
+    console.log(teasList);
+    console.log(teasList.filter((name) => name.name === datapoint.flare));
+    console.log(flareSelectedOnDp[0]);
+    setDataMapingComponents(
+      flareSelectedOnDp ? flareSelectedOnDp[0]?.data?.composition : [0]
+    );
+  }, [datapoint.flare]);
+
   return datapoint.variable !== "Components" ? (
     <>
+      {console.log(dataMappingComponents)}
       <GridElement cols={6} rows={1} style={{ alignContent: "center" }}>
         <div
           onClick={() => handleDataPointClick(datapoint)}
@@ -124,7 +139,6 @@ const Datapoint = ({
                   : setShowModalMapComponents(true)
               }
             >
-              {console.log(datapoint.flare)}
               Map Your Components
             </Button>
           </div>
