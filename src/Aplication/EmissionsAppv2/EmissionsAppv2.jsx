@@ -10,7 +10,7 @@ import useEmissionsV2 from "./useEmissionsv2";
 import TeaCreation from "./TeaCreation";
 import "../AppCommonStyles.css";
 import Mapping from "./Mapping";
-import License from "./License/License";
+import License from "./Licence_manager/License";
 import Westbot from "../../Componentes/Westbot/Westbot";
 import ReporterMananger from "./Reports/ReporterMananger";
 import Reporter from "./Reports/Reporter";
@@ -42,7 +42,6 @@ const EmissionsAppV2 = () => {
   const { teasList, setSidebarList, coordinates, imageSrc, loading, alarms } =
     useEmissionsV2(dates);
 
-    
   const nav = useNavigate();
   const { assetId } = useParams();
 
