@@ -21,6 +21,11 @@ const Datapoint = ({
   const [showAlert, setShowAlert] = useState(false);
   const [flareSelectedOnDp, setFlareSelectedOnDp] = useState("none");
 
+  function saveMapings(mappedComponents) {
+    console.log(mappedComponents);
+    datapoint.composition = mappedComponents;
+  }
+
   useEffect(() => {
     const selectedFlare = teasList.filter(
       (name) => name.name === datapoint.flare
@@ -38,7 +43,6 @@ const Datapoint = ({
 
   return datapoint.variable !== "Components" ? (
     <>
-      {console.log(dataMappingComponents)}
       <GridElement cols={6} rows={1} style={{ alignContent: "center" }}>
         <div
           onClick={() => handleDataPointClick(datapoint)}
@@ -99,21 +103,11 @@ const Datapoint = ({
           onClick={() => handleDataPointClick(datapoint)}
           className="Datapoint"
         >
-          <strong> Variable: </strong>
-          <span>
-            <select
-              value={datapoint.variable ?? ""}
-              onChange={(event) =>
-                setDataMapingComponents(datapoint, event.target.value)
-              }
-            >
-              <option value="">None</option>
-              <option value="flow"> Gas Flow </option>
-              <option value="pressure"> Gas Pressure </option>
-              <option value="temperature"> Gas Temperature </option>
-              <option value="Components">Components</option>
-            </select>
-          </span>
+          {deleting && (
+            <div className="SidebarAsset-DeleteIcon-search ">
+              <img height="90%" src={DeleteIcon} alt="-" />
+            </div>
+          )}
           <strong> Flare: </strong>
           <span>
             <select
@@ -134,6 +128,21 @@ const Datapoint = ({
                 ))}
             </select>
           </span>
+          <strong> Variable: </strong>
+          <span>
+            <select
+              value={datapoint.variable ?? ""}
+              onChange={(event) =>
+                setDataMapingComponents(datapoint, event.target.value)
+              }
+            >
+              <option value="">None</option>
+              <option value="flow"> Gas Flow </option>
+              <option value="pressure"> Gas Pressure </option>
+              <option value="temperature"> Gas Temperature </option>
+              <option value="Components">Components</option>
+            </select>
+          </span>
           <div style={{ width: "5em" }}>
             <Button
               onClick={() =>
@@ -149,7 +158,7 @@ const Datapoint = ({
         <MapComponent
           show={showModalMapComponents}
           setShow={setShowModalMapComponents}
-          saveMapping={setDataMapingComponents}
+          saveMapping={saveMapings}
           data={dataMappingComponents}
         />
       </GridElement>

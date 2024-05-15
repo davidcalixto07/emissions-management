@@ -81,6 +81,7 @@ function useEmissionsApi() {
   }
 
   async function PostDatamappings(json) {
+    console.log(json);
     try {
       const response = await axios.post("/api/assets/SaveMappings", json);
       return response.data;

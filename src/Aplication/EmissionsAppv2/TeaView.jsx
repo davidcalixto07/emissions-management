@@ -72,7 +72,6 @@ const TeaView = () => {
       <AppTab label="Emissions Simulator">
         <SimulationView averages={results} />
       </AppTab>
-
       <AppTab label="Flare Config">
         <div style={{ height: "calc(100% - 4em)" }}>
           <TeaCreation assetData={assetData} />

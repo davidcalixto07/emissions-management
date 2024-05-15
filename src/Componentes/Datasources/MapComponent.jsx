@@ -4,24 +4,40 @@ import GridElement from "../../Aplication/Utils/GridElement";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-function MapComponent({ show, setShow, saveMapping, data }) {
+function MapComponent({ show, setShow, saveMapping }) {
   const [mappedComponents, setMappedComponents] = useState([]);
   const [gases, setGases] = useState([]);
   const [values, setValues] = useState([]);
+  const data = {
+    C1: "",
+    C10: "",
+    C2: "",
+    C3: "",
+    C4: "",
+    C5: "",
+    C6: "",
+    C7: "",
+    C8: "",
+    C9: "",
+    CO2: "",
+    H2O: "",
+    "I-C4": "",
+    "I-C5": "",
+    "N-C5": "",
+    N2: "",
+  };
 
   useEffect(() => {
     setGases(Object?.keys(data));
     setValues(Object?.values(data));
-  }, [data]);
+    console.log(values);
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    const parsed_value = parseFloat(value);
-    const newValue = isNaN(parsed_value) ? value : parsed_value;
-
     setMappedComponents((prevState) => ({
       ...prevState,
-      [name]: newValue,
+      [name]: value,
     }));
   };
   return (
@@ -41,7 +57,7 @@ function MapComponent({ show, setShow, saveMapping, data }) {
               <h5>Map components</h5>
             </GridElement>
 
-            {gases.map((t) => (
+            {gases.map((t, i) => (
               <GridElement
                 className="grid-cell-white justified"
                 style={{
@@ -54,8 +70,8 @@ function MapComponent({ show, setShow, saveMapping, data }) {
                 <input
                   type="text"
                   name={t}
-                  placeholder="Node/tag"
                   onChange={handleChange}
+                  placeholder={values[i]}
                 />
                 <br></br>
               </GridElement>
@@ -69,7 +85,10 @@ function MapComponent({ show, setShow, saveMapping, data }) {
         </Button>
         <Button
           variant="primary"
-          onClick={() => saveMapping(mappedComponents, setShow(false))}
+          onClick={() => {
+            saveMapping(mappedComponents);
+            setShow(false);
+          }}
         >
           Save
         </Button>

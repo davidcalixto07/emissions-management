@@ -50,7 +50,6 @@ const SimulationView = ({ averages }) => {
   useEffect(() => {
     console.log("CalcSumEffect");
     CalcSum(Object.values(comp));
-    console.log(simModel);
   }, []);
 
   useEffect(() => {
@@ -69,12 +68,13 @@ const SimulationView = ({ averages }) => {
   useEffect(() => {
     if (
       actualEmissions ||
-      isNaN(averages?.emissions?.simModel?.CO2e?.avg) ||
+      isNaN(averages?.emissions[simModel]?.CO2e?.avg) ||
       averages?.emissions?.simModel?.CO2e?.avg === 0
     )
-      return;
-    console.log("useEffect actualEmissions");
-    setActualEmissions(averages?.emissions?.simModel?.CO2e?.avg);
+      console.log("useEffect actualEmissions");
+    console.log(averages?.emissions[simModel]?.CO2e?.avg);
+    setActualEmissions(averages?.emissions[simModel]?.CO2e?.avg);
+    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -93,9 +93,11 @@ const SimulationView = ({ averages }) => {
       frame.pressure = parseFloat(p);
       frame.temperature = parseFloat(t);
     }
+    console.log(frame);
     axios
       .post("/api/emissionsapi2-colwest2/v1/Calculate", frame)
       .then((response) => {
+        console.log(response);
         if (response.data[0][simModel]["CO2e"]) {
           const co2Eq = parseFloat(response.data[0][simModel]["CO2e"].value);
           const Nox = parseFloat(response.data[0][simModel]["CO2"].value);
@@ -111,7 +113,6 @@ const SimulationView = ({ averages }) => {
         console.log("Error", error);
       });
   }
-
   const handleChange = (e) => {
     if (isNaN(parseFloat(e.target.value))) {
       e.target.value = 0;
