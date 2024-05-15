@@ -13,7 +13,6 @@ function MapComponent({ show, setShow, saveMapping, data }) {
     setGases(Object?.keys(data));
     setValues(Object?.values(data));
   }, [data]);
-  console.log(data);
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -53,7 +52,7 @@ function MapComponent({ show, setShow, saveMapping, data }) {
               >
                 <span> {t} </span>
                 <input
-                  type="number"
+                  type="text"
                   name={t}
                   placeholder="Node/tag"
                   onChange={handleChange}

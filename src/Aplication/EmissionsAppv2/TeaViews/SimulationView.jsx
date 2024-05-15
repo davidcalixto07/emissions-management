@@ -16,6 +16,7 @@ const SimulationView = ({ averages }) => {
   const [flow, setFlow] = useState(0);
   const [pressure, setPressure] = useState(0);
   const [temperature, setTemperature] = useState(0);
+  const [simModel, setSimModel] = useState("west");
   const [actualEmissions, setActualEmissions] = useState(0);
   const [sum, setSum] = useState(0);
 
@@ -49,29 +50,31 @@ const SimulationView = ({ averages }) => {
   useEffect(() => {
     console.log("CalcSumEffect");
     CalcSum(Object.values(comp));
+    console.log(simModel);
   }, []);
 
   useEffect(() => {
     setFlow(averages?.flow?.avg);
     setPressure(averages?.pressure?.avg);
     setTemperature(averages?.temperature?.avg);
+    setSimModel(simModel);
     CalculateEmissions(
       averages?.flow?.avg,
       averages?.pressure?.avg,
       averages?.temperature?.avg
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [averages]);
+  }, [averages, simModel]);
   console.log(flow, pressure, temperature);
   useEffect(() => {
     if (
       actualEmissions ||
-      isNaN(averages?.emissions?.west?.CO2e?.avg) ||
-      averages?.emissions?.west?.CO2e?.avg === 0
+      isNaN(averages?.emissions?.simModel?.CO2e?.avg) ||
+      averages?.emissions?.simModel?.CO2e?.avg === 0
     )
       return;
     console.log("useEffect actualEmissions");
-    setActualEmissions(averages?.emissions?.west?.CO2e?.avg);
+    setActualEmissions(averages?.emissions?.simModel?.CO2e?.avg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -93,9 +96,9 @@ const SimulationView = ({ averages }) => {
     axios
       .post("/api/emissionsapi2-colwest2/v1/Calculate", frame)
       .then((response) => {
-        if (response.data[0].west["CO2e"]) {
-          const co2Eq = parseFloat(response.data[0].west["CO2e"].value);
-          const Nox = parseFloat(response.data[0].west["CO2"].value);
+        if (response.data[0][simModel]["CO2e"]) {
+          const co2Eq = parseFloat(response.data[0][simModel]["CO2e"].value);
+          const Nox = parseFloat(response.data[0][simModel]["CO2"].value);
           const emissions = {
             co2Eq: co2Eq.toFixed(4),
             Nox: Nox.toFixed(4),
@@ -296,10 +299,28 @@ const SimulationView = ({ averages }) => {
           </GridElement>
         </GridUtil>
       </GridElement>
+      <GridElement
+        rows={1}
+        cols={3}
+        className="grid-cell-white center trans ns"
+      >
+        Calculation Model:
+        <select
+          value={simModel}
+          onChange={(e) => setSimModel(e.target.value)}
+          className="emissionsSelector"
+          style={{ width: "7.5rem" }}
+        >
+          <option value={"west"}>West </option>
+          <option value={"anh"}>ANH</option>
+          <option value={"em_factor"}>Emissions Factor</option>
+          <option value={"direct"}>Direct</option>
+        </select>
+      </GridElement>
 
       <GridElement
         rows={1}
-        cols={6}
+        cols={3}
         className="grid-cell-white center trans ns"
       >
         <Button onClick={() => CalculateEmissions()}> Calculate </Button>

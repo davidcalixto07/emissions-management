@@ -22,16 +22,19 @@ const Datapoint = ({
   const [flareSelectedOnDp, setFlareSelectedOnDp] = useState("none");
 
   useEffect(() => {
-    setFlareSelectedOnDp(
-      teasList.filter((name) => name.name === datapoint.flare)
+    const selectedFlare = teasList.filter(
+      (name) => name.name === datapoint.flare
     );
-    console.log(teasList);
-    console.log(teasList.filter((name) => name.name === datapoint.flare));
-    console.log(flareSelectedOnDp[0]);
+    setFlareSelectedOnDp(selectedFlare);
+  }, [datapoint.flare, teasList]);
+
+  useEffect(() => {
     setDataMapingComponents(
-      flareSelectedOnDp ? flareSelectedOnDp[0]?.data?.composition : [0]
+      flareSelectedOnDp && flareSelectedOnDp.length > 0
+        ? flareSelectedOnDp[0]?.data?.composition
+        : [0]
     );
-  }, [datapoint.flare]);
+  }, [flareSelectedOnDp, setDataMapingComponents]);
 
   return datapoint.variable !== "Components" ? (
     <>
@@ -101,7 +104,7 @@ const Datapoint = ({
             <select
               value={datapoint.variable ?? ""}
               onChange={(event) =>
-                handleMappingVar(datapoint, event.target.value)
+                setDataMapingComponents(datapoint, event.target.value)
               }
             >
               <option value="">None</option>
