@@ -190,8 +190,6 @@ const Mapping = () => {
     }
   }, [datasources]);
 
-  console.log(dataMappingComponents);
-
   return (
     <>
       <CustomGrid rows={8} cols={8} className={"Overview-100"}>

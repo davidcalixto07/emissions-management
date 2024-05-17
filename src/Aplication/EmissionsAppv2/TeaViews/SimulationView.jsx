@@ -20,7 +20,9 @@ const SimulationView = ({ averages }) => {
   const [actualEmissions, setActualEmissions] = useState(0);
   const [sum, setSum] = useState(0);
 
+  console.log(averages.emissions[simModel]?.CO2e);
   console.log(actualEmissions);
+  console.log(averageEmissions);
 
   const barData = [
     {
@@ -57,11 +59,13 @@ const SimulationView = ({ averages }) => {
     setPressure(averages?.pressure?.avg);
     setTemperature(averages?.temperature?.avg);
     setSimModel(simModel);
-    CalculateEmissions(
-      averages?.flow?.avg,
-      averages?.pressure?.avg,
-      averages?.temperature?.avg
-    );
+    if (averageEmissions) {
+      CalculateEmissions(
+        averages?.flow?.avg,
+        averages?.pressure?.avg,
+        averages?.temperature?.avg
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [averages, simModel]);
   console.log(flow, pressure, temperature);
@@ -69,14 +73,14 @@ const SimulationView = ({ averages }) => {
     if (
       actualEmissions ||
       isNaN(averages?.emissions[simModel]?.CO2e?.avg) ||
-      averages?.emissions?.simModel?.CO2e?.avg === 0
+      averages?.emissions[simModel]?.CO2e?.avg === 0
     )
       console.log("useEffect actualEmissions");
     console.log(averages?.emissions[simModel]?.CO2e?.avg);
     setActualEmissions(averages?.emissions[simModel]?.CO2e?.avg);
     return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [simModel, averageEmissions]);
 
   function CalculateEmissions(f, p, t) {
     const frame = {
@@ -100,12 +104,14 @@ const SimulationView = ({ averages }) => {
         console.log(response);
         if (response.data[0][simModel]["CO2e"]) {
           const co2Eq = parseFloat(response.data[0][simModel]["CO2e"].value);
+          console.log(co2Eq);
           const Nox = parseFloat(response.data[0][simModel]["CO2"].value);
           const emissions = {
             co2Eq: co2Eq.toFixed(4),
             Nox: Nox.toFixed(4),
             So2: 0,
           };
+          console.log(emissions);
           setAverageEmissions(emissions);
         }
       })
